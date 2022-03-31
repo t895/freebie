@@ -11,50 +11,44 @@ import android.widget.Toast;
 
 import com.example.freebie.fragments.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
     final FragmentManager fragmentManager = getSupportFragmentManager();
-    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bottomNavigationView = findViewById(R.id.bottomNavigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
+                Fragment fragment = null;
                 switch (item.getItemId()) {
                     case R.id.action_home:
                         fragment = new HomeFragment();
-                        Toast.makeText(MainActivity.this, "home pressed", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_albums:
                         fragment = new HomeFragment();
-//                        fragment = new ComposeFragment();
-                        Toast.makeText(MainActivity.this, "albums pressed", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_artists:
                         fragment = new HomeFragment();
-//                        fragment = new ComposeFragment();
-                        Toast.makeText(MainActivity.this, "artists pressed", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_settings:
                     default:
                         fragment = new HomeFragment();
-//                        fragment = new ProfileFragment();
-                        Toast.makeText(MainActivity.this, "settings pressed", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
                 return true;
             }
         });
+        // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 }
