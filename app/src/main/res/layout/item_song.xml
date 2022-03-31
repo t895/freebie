@@ -2,27 +2,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btnSong"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="8dp">
 
     <ImageView
         android:id="@+id/ivAlbum"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvSongTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginStart="4dp"
         android:layout_toEndOf="@+id/ivAlbum"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:text="Song Title" />
@@ -32,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvSongTitle"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@+id/ivAlbum"
         android:autoLink="all"
@@ -45,20 +46,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="8dp"
         android:layout_toStartOf="@+id/btnLike"
         tools:text="2:45" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLike"
-        android:layout_width="52dp"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="50dp"
+
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:visibility="visible"
-        app:icon="@drawable/ic_baseline_thumb_up_24" />
+        app:icon="@drawable/ic_action_favorite_outline" />
 
 </RelativeLayout>

@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull @org.jetbrains.annotations.NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         rvSongs = view.findViewById(R.id.rvSongs);
@@ -92,10 +92,10 @@ public class HomeFragment extends Fragment {
         adapter = new SongsAdapter(getContext(), allSongs);
 
         rvSongs.setAdapter(adapter);
-
         rvSongs.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer = view.findViewById(R.id.swipeContainer);
+        swipeContainer.setColorSchemeResources(android.R.color.holo_purple);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -107,12 +107,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
         // refresh song list (add a method in this class)
         updateSongs();
     }
@@ -120,16 +114,10 @@ public class HomeFragment extends Fragment {
     protected void updateSongs() {
         ArrayList<Song> songs = new ArrayList<Song>();
 
-        // create cummy list of songs for demonstration purposes
+        // create fake list of songs for demonstration purposes
         for (int i = 1; i <= 15; i++) {
             songs.add(new Song());
         }
-
-
-        for (Song song : songs) {
-            Log.i(TAG, "Song: " + song.getTitle() + ", artist: " + song.getArtist());
-        }
-
 
         // Remember to CLEAR OUT old items before appending in the new ones
         adapter.clear();
@@ -139,7 +127,6 @@ public class HomeFragment extends Fragment {
         swipeContainer.setRefreshing(false);
 
         adapter.notifyDataSetChanged();
-        Log.i(TAG, "after for loop");
     }
 
 //
