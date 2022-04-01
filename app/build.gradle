@@ -6,7 +6,7 @@ android {
     compileSdkVersion 32
 
     defaultConfig {
-        applicationId "com.example.freebie"
+        applicationId "com.codepath.freebie"
         minSdkVersion 23
         targetSdkVersion 32
         versionCode 1
