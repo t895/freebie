@@ -127,7 +127,7 @@ public class HomeFragment extends Fragment {
             do {
                 int column_index = songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);//Instead of "MediaStore.Images.Media.DATA" can be used "_data"
                 filePathUri = Uri.parse(songCursor.getString(column_index));
-                fileName = filePathUri.getPath().toString();
+                fileName = filePathUri.getPath();
 
                 String title = songCursor.getString(songTitle);
                 String artist = songCursor.getString(songArtist);
