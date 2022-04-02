@@ -25,6 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@+id/ivAlbum"
+        android:ellipsize="end"
+        android:maxWidth="224dp"
+        android:maxLines="2"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:text="Song Title" />
 
@@ -37,8 +40,10 @@
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@+id/ivAlbum"
         android:autoLink="all"
+        android:ellipsize="end"
         android:linksClickable="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:maxWidth="224dp"
+        android:maxLines="1"
         tools:text="Artist Name" />
 
     <TextView
