@@ -110,3 +110,6 @@ Basic local music player
 ## Networking
 ### Last.fm
 #### https://www.last.fm/api
+
+** Week 7 Demo **
+<img src="Demo.gif" width=600>
