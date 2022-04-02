@@ -1,6 +1,7 @@
 package com.example.freebie.fragments;
 
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import com.example.freebie.R;
 import com.example.freebie.SongsAdapter;
 import com.example.freebie.models.Song;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,6 +129,8 @@ public class HomeFragment extends Fragment {
                 songs.add(new Song(title, artist));
             } while (songCursor.moveToNext());
         }
+
+        songCursor.close();
 
         // Remember to CLEAR OUT old items before appending in the new ones
         adapter.clear();
