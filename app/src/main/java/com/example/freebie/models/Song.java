@@ -1,43 +1,30 @@
 package com.example.freebie.models;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Song {
 
     public String title;
-    public String length;
-    // public long id; // MBID? if necessary
     public String artist;
+    public String path;
+    public String length;
     public String genre;
 
-    public Song(String title, String artist){
+    public Song(String title, String artist, String path){
         this.title = title;
-        length = "2:45";
-        // id = 123456789;
         this.artist = artist;
+        this.path = path;
+        length = "2:45";
         genre = "example genre";
     }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() { return title; }
 
-    public String getLength() {
-        return length;
-    }
+    public String getArtist() { return artist; }
 
-    public String getArtist() {
-        return artist;
-    }
+    public String getPath() { return path; }
 
-    public String getGenre() {
-        return genre;
-    }
+    public String getLength() { return length; }
+
+    public String getGenre() { return genre; }
 
     //    public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
 //        Tweet tweet = new Tweet();

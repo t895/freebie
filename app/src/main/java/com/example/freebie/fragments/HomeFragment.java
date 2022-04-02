@@ -116,6 +116,8 @@ public class HomeFragment extends Fragment {
         ArrayList<Song> songs = new ArrayList<>();
 
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        Uri filePathUri;
+        String fileName = "Unknown";
         Cursor songCursor = getContext().getContentResolver().query(songUri, null, null, null, null);
 
         if(songCursor != null && songCursor.moveToFirst()) {
@@ -123,10 +125,14 @@ public class HomeFragment extends Fragment {
             int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
 
             do {
+                int column_index = songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);//Instead of "MediaStore.Images.Media.DATA" can be used "_data"
+                filePathUri = Uri.parse(songCursor.getString(column_index));
+                fileName = filePathUri.getPath().toString();
+
                 String title = songCursor.getString(songTitle);
                 String artist = songCursor.getString(songArtist);
-                Log.i(TAG, "Song title: " + title);
-                songs.add(new Song(title, artist));
+                Log.i(TAG, "Song path: " + fileName);
+                songs.add(new Song(title, artist, fileName));
             } while (songCursor.moveToNext());
         }
 
