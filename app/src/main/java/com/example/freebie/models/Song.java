@@ -15,11 +15,11 @@ public class Song {
     public String artist;
     public String genre;
 
-    public Song(){
-        title = "example song title";
+    public Song(String title, String artist){
+        this.title = title;
         length = "2:45";
         // id = 123456789;
-        artist = "example artist name";
+        this.artist = artist;
         genre = "example genre";
     }
 

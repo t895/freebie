@@ -1,5 +1,7 @@
 package com.example.freebie.fragments;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,68 +98,41 @@ public class HomeFragment extends Fragment {
         rvSongs.setLayoutManager(new LinearLayoutManager(getContext()));
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
-        swipeContainer.setColorSchemeResources(android.R.color.holo_purple);
+        swipeContainer.setColorSchemeResources(R.color.freebie_light_primary);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                // refresh the song list
                 updateSongs();
             }
         });
-
         // refresh song list (add a method in this class)
         updateSongs();
     }
 
-    protected void updateSongs() {
-        ArrayList<Song> songs = new ArrayList<Song>();
+    public void updateSongs() {
+        ArrayList<Song> songs = new ArrayList<>();
 
-        // create fake list of songs for demonstration purposes
-        for (int i = 1; i <= 15; i++) {
-            songs.add(new Song());
+        Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        Cursor songCursor = getContext().getContentResolver().query(songUri, null, null, null, null);
+
+        if(songCursor != null && songCursor.moveToFirst()) {
+            int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+            int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+
+            do {
+                String title = songCursor.getString(songTitle);
+                String artist = songCursor.getString(songArtist);
+                Log.i(TAG, "Song title: " + title);
+                songs.add(new Song(title, artist));
+            } while (songCursor.moveToNext());
         }
 
         // Remember to CLEAR OUT old items before appending in the new ones
         adapter.clear();
-
         allSongs.addAll(songs);
-        // Now we call setRefreshing(false) to signal refresh has finished
-        swipeContainer.setRefreshing(false);
 
+        // Signal refresh has finished
+        swipeContainer.setRefreshing(false);
         adapter.notifyDataSetChanged();
     }
-
-//
-//    protected void queryPosts() {
-//        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-//        query.include(Post.KEY_USER);
-//        query.setLimit(20);
-//        query.addDescendingOrder(Post.KEY_CREATED_AT);
-//        query.findInBackground(new FindCallback<Post>() {
-//            @Override
-//            public void done(List<Post> posts, ParseException e) {
-//                if (e != null) {
-//                    Log.e(TAG, "error with querying posts!", e);
-//                    return;
-//                }
-//                Log.i(TAG, "before for loop");
-//                for (Post post : posts) {
-//                    Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
-//                }
-//
-//                // Remember to CLEAR OUT old items before appending in the new ones
-//                adapter.clear();
-//
-//                allPosts.addAll(posts);
-//                // Now we call setRefreshing(false) to signal refresh has finished
-//                swipeContainer.setRefreshing(false);
-//
-//                adapter.notifyDataSetChanged();
-//                Log.i(TAG, "after for loop");
-//            }
-//        });
-//    }
 }
