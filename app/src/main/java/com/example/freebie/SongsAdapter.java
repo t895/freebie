@@ -1,7 +1,11 @@
 package com.example.freebie;
 
+import static com.example.freebie.MainActivity.currentlyPlayingSong;
+import static com.example.freebie.MainActivity.mediaPlayer;
+
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,12 +76,17 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
             btnSong.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO: Create one mediaPlayer that changes between songs
-                    MediaPlayer mediaPlayer = new MediaPlayer();
                     try {
+                        // Reset the song that the media player is referencing
+                        mediaPlayer.reset();
+
+                        // Set the correct song path and start the player
                         mediaPlayer.setDataSource(song.getPath());
                         mediaPlayer.prepare();
                         mediaPlayer.start();
+
+                        // Track the currently playing song globally
+                        currentlyPlayingSong = song;
                     } catch (Exception e) { e.printStackTrace(); }
                 }
             });

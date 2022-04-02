@@ -131,7 +131,6 @@ public class HomeFragment extends Fragment {
 
                 String title = songCursor.getString(songTitle);
                 String artist = songCursor.getString(songArtist);
-                Log.i(TAG, "Song path: " + fileName);
                 songs.add(new Song(title, artist, fileName));
             } while (songCursor.moveToNext());
         }
