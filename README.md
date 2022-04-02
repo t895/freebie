@@ -112,4 +112,5 @@ Basic local music player
 #### https://www.last.fm/api
 
 ** Week 7 Demo **
-<img src="Demo.gif" width=600>
+
+<img src="Demo.gif" width=200>
