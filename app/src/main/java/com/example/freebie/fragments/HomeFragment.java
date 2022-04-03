@@ -1,6 +1,9 @@
 package com.example.freebie.fragments;
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -104,9 +107,7 @@ public class HomeFragment extends Fragment {
         swipeContainer.setColorSchemeResources(R.color.freebie_light_primary);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() {
-                updateSongs();
-            }
+            public void onRefresh() { updateSongs(); }
         });
         // refresh song list (add a method in this class)
         updateSongs();
@@ -117,24 +118,38 @@ public class HomeFragment extends Fragment {
 
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Uri filePathUri;
-        String fileName = "Unknown";
+        String filePath = "Unknown";
         Cursor songCursor = getContext().getContentResolver().query(songUri, null, null, null, null);
+
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
 
         if(songCursor != null && songCursor.moveToFirst()) {
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+            int songAlbum = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
 
             do {
+                // Retrieve song path
                 int column_index = songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);//Instead of "MediaStore.Images.Media.DATA" can be used "_data"
                 filePathUri = Uri.parse(songCursor.getString(column_index));
-                fileName = filePathUri.getPath();
+                filePath = filePathUri.getPath();
+
+                // Get album art and convert it to a bitmap
+                // TODO: This is incredibly slow and hogs a bunch of memory, fix this
+                Bitmap albumBitmap = null;
+                mediaMetadataRetriever.setDataSource(filePath);
+                byte[] albumArtData = mediaMetadataRetriever.getEmbeddedPicture();
+
+                if (albumArtData != null) {
+                    albumBitmap = BitmapFactory.decodeByteArray(albumArtData, 0, albumArtData.length);
+                    albumBitmap = Bitmap.createScaledBitmap(albumBitmap, 8, 8, false);
+                }
 
                 String title = songCursor.getString(songTitle);
                 String artist = songCursor.getString(songArtist);
-                songs.add(new Song(title, artist, fileName));
+                songs.add(new Song(title, artist, filePath, albumBitmap));
             } while (songCursor.moveToNext());
         }
-
         songCursor.close();
 
         // Remember to CLEAR OUT old items before appending in the new ones

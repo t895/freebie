@@ -1,17 +1,21 @@
 package com.example.freebie.models;
 
+import android.graphics.Bitmap;
+
 public class Song {
 
     public String title;
     public String artist;
     public String path;
+    public Bitmap albumArt;
     public String length;
     public String genre;
 
-    public Song(String title, String artist, String path){
+    public Song(String title, String artist, String path, Bitmap albumArt){
         this.title = title;
         this.artist = artist;
         this.path = path;
+        this.albumArt = albumArt;
         length = "2:45";
         genre = "example genre";
     }
@@ -21,6 +25,8 @@ public class Song {
     public String getArtist() { return artist; }
 
     public String getPath() { return path; }
+
+    public Bitmap getAlbumArt() { return albumArt; }
 
     public String getLength() { return length; }
 
