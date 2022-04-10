@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxWidth="224dp"
-            android:maxLines="2"
+            android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="16sp"
             tools:text="Song Title" />
