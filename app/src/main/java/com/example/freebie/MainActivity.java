@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -26,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
     public static MediaPlayer mediaPlayer;
     public static Song currentlyPlayingSong;
 
-    public HomeFragment homeFragment;
-    public AlbumsFragment albumsFragment;
-    public ArtistsFragment artistsFragment;
-    public SettingsFragment settingsFragment;
+    public Fragment homeFragment;
+    public Fragment albumsFragment;
+    public Fragment artistsFragment;
+    public Fragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,33 +39,40 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
 
         // Create each fragment in advance
-        if(savedInstanceState == null) {
-            homeFragment = HomeFragment.newInstance();
-            albumsFragment = AlbumsFragment.newInstance();
-            artistsFragment = ArtistsFragment.newInstance();
-            settingsFragment = SettingsFragment.newInstance();
-        }
+        homeFragment = new HomeFragment();
+        albumsFragment = new AlbumsFragment();
+        artistsFragment = new ArtistsFragment();
+        settingsFragment = new SettingsFragment();
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment fragment = null;
+                String fragmentTag = null;
+                // TODO: Find a better way to set tags
                 switch (item.getItemId()) {
                     case R.id.action_home:
-                        displayHomeFragment();
+                        fragment = homeFragment;
+                        fragmentTag = "HomeFragment";
                         break;
                     case R.id.action_albums:
-                        displayAlbumsFragment();
+                        fragment = albumsFragment;
+                        fragmentTag = "AlbumsFragment";
                         break;
                     case R.id.action_artists:
-                        displayArtistsFragment();
+                        fragment = artistsFragment;
+                        fragmentTag = "ArtistsFragment";
                         break;
                     case R.id.action_settings:
-                        displaySettingsFragment();
+                        fragment = settingsFragment;
+                        fragmentTag = "SettingsFragment";
                         break;
                     default:
-                        displayHomeFragment();
+                        fragment = homeFragment;
+                        fragmentTag = "HomeFragment";
                         break;
                 }
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment, fragmentTag).commit();
                 return true;
             }
         });
@@ -78,65 +84,5 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp) { currentlyPlayingSong = null; }
         });
-    }
-
-    protected void displayHomeFragment() {
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        if (homeFragment.isAdded()) { // if the fragment is already in container
-            ft.show(homeFragment);
-        } else { // fragment needs to be added to frame container
-            ft.add(R.id.flContainer, homeFragment, "HomeFragment");
-        }
-        // Hide non-relevant fragments
-        if (albumsFragment.isAdded()) { ft.hide(albumsFragment); }
-        if (artistsFragment.isAdded()) { ft.hide(artistsFragment); }
-        if (settingsFragment.isAdded()) { ft.hide(settingsFragment); }
-        // Commit changes
-        ft.commit();
-    }
-
-    protected void displayAlbumsFragment() {
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        if (albumsFragment.isAdded()) { // if the fragment is already in container
-            ft.show(albumsFragment);
-        } else { // fragment needs to be added to frame container
-            ft.add(R.id.flContainer, albumsFragment, "AlbumsFragment");
-        }
-        // Hide non-relevant fragments
-        if (homeFragment.isAdded()) { ft.hide(homeFragment); }
-        if (artistsFragment.isAdded()) { ft.hide(artistsFragment); }
-        if (settingsFragment.isAdded()) { ft.hide(settingsFragment); }
-        // Commit changes
-        ft.commit();
-    }
-
-    protected void displayArtistsFragment() {
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        if (artistsFragment.isAdded()) { // if the fragment is already in container
-            ft.show(artistsFragment);
-        } else { // fragment needs to be added to frame container
-            ft.add(R.id.flContainer, artistsFragment, "ArtistsFragment");
-        }
-        // Hide non-relevant fragments
-        if (homeFragment.isAdded()) { ft.hide(homeFragment); }
-        if (albumsFragment.isAdded()) { ft.hide(albumsFragment); }
-        if (settingsFragment.isAdded()) { ft.hide(settingsFragment); }
-        // Commit changes
-        ft.commit();
-    }
-
-    protected void displaySettingsFragment() {
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        if (settingsFragment.isAdded()) { // if the fragment is already in container
-            ft.show(settingsFragment);
-        } else { // fragment needs to be added to frame container
-            ft.add(R.id.flContainer, settingsFragment, "settingsFragment");
-        }
-        // Hide non-relevant fragments
-        if (homeFragment.isAdded()) { ft.hide(homeFragment); }
-        if (albumsFragment.isAdded()) { ft.hide(albumsFragment); }
-        if (artistsFragment.isAdded()) { ft.hide(artistsFragment); }
-        // Commit changes
-        ft.commit();
     }
 }
