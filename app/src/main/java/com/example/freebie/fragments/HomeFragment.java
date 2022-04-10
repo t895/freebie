@@ -4,18 +4,16 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +24,6 @@ import com.example.freebie.R;
 import com.example.freebie.SongsAdapter;
 import com.example.freebie.models.Song;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +34,12 @@ import java.util.List;
  */
 public class HomeFragment extends Fragment {
 
-    private static final String TAG = "HomeFragment";
+    public static final String TAG = "HomeFragment";
     private RecyclerView rvSongs;
     private List<Song> allSongs;
-    private SwipeRefreshLayout swipeContainer;
     private SongsAdapter adapter;
+
+    private FragmentManager fragmentManager;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -95,6 +93,8 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        fragmentManager = getParentFragmentManager();
+
         rvSongs = view.findViewById(R.id.rvSongs);
 
         allSongs = new ArrayList<>();
@@ -103,17 +103,43 @@ public class HomeFragment extends Fragment {
         rvSongs.setAdapter(adapter);
         rvSongs.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        swipeContainer = view.findViewById(R.id.swipeContainer);
-        swipeContainer.setColorSchemeResources(R.color.freebie_light_primary);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() { updateSongs(); }
-        });
-        // refresh song list (add a method in this class)
-        updateSongs();
+        // Refresh song list
+        updateSongsOnSeparateThread();
     }
 
-    public void updateSongs() {
+    public void updateSongsOnSeparateThread() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Work to do
+                Log.i(TAG, "Loading songs...");
+                ArrayList<Song> songs = updateSongs();
+
+                // Check if fragment is active
+                Fragment fragment = fragmentManager.findFragmentByTag(TAG);
+                if(fragment == null) {
+                    Log.w(TAG, "Breaking out of thread, fragment switched during loading");
+                    return;
+                }
+
+                // Post execution
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Remember to CLEAR OUT old items before appending in the new ones
+                        adapter.clear();
+                        allSongs.addAll(songs);
+
+                        // Signal refresh has finished
+                        adapter.notifyDataSetChanged();
+                        Log.i(TAG, "Finished loading songs!");
+                    }
+                });
+            }
+        }).start();
+    }
+
+    public ArrayList<Song> updateSongs() {
         ArrayList<Song> songs = new ArrayList<>();
 
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -135,14 +161,13 @@ public class HomeFragment extends Fragment {
                 filePath = filePathUri.getPath();
 
                 // Get album art and convert it to a bitmap
-                // TODO: This is incredibly slow and hogs a bunch of memory, fix this
                 Bitmap albumBitmap = null;
                 mediaMetadataRetriever.setDataSource(filePath);
                 byte[] albumArtData = mediaMetadataRetriever.getEmbeddedPicture();
 
                 if (albumArtData != null) {
                     albumBitmap = BitmapFactory.decodeByteArray(albumArtData, 0, albumArtData.length);
-                    albumBitmap = Bitmap.createScaledBitmap(albumBitmap, 8, 8, false);
+                    albumBitmap = Bitmap.createScaledBitmap(albumBitmap, 128, 128, false);
                 }
 
                 String title = songCursor.getString(songTitle);
@@ -152,12 +177,6 @@ public class HomeFragment extends Fragment {
         }
         songCursor.close();
 
-        // Remember to CLEAR OUT old items before appending in the new ones
-        adapter.clear();
-        allSongs.addAll(songs);
-
-        // Signal refresh has finished
-        swipeContainer.setRefreshing(false);
-        adapter.notifyDataSetChanged();
+        return songs;
     }
 }

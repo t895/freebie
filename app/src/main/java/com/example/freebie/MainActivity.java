@@ -7,11 +7,12 @@ import androidx.fragment.app.FragmentManager;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.example.freebie.fragments.AlbumsFragment;
+import com.example.freebie.fragments.ArtistsFragment;
 import com.example.freebie.fragments.HomeFragment;
+import com.example.freebie.fragments.SettingsFragment;
 import com.example.freebie.models.Song;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -24,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
     public static MediaPlayer mediaPlayer;
     public static Song currentlyPlayingSong;
 
+    public Fragment homeFragment;
+    public Fragment albumsFragment;
+    public Fragment artistsFragment;
+    public Fragment settingsFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,26 +38,41 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer = new MediaPlayer();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
 
+        // Create each fragment in advance
+        homeFragment = new HomeFragment();
+        albumsFragment = new AlbumsFragment();
+        artistsFragment = new ArtistsFragment();
+        settingsFragment = new SettingsFragment();
+
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment = null;
+                String fragmentTag = null;
+                // TODO: Find a better way to set tags
                 switch (item.getItemId()) {
                     case R.id.action_home:
-                        fragment = new HomeFragment();
+                        fragment = homeFragment;
+                        fragmentTag = "HomeFragment";
                         break;
                     case R.id.action_albums:
-                        fragment = new HomeFragment();
+                        fragment = albumsFragment;
+                        fragmentTag = "AlbumsFragment";
                         break;
                     case R.id.action_artists:
-                        fragment = new HomeFragment();
+                        fragment = artistsFragment;
+                        fragmentTag = "ArtistsFragment";
                         break;
                     case R.id.action_settings:
+                        fragment = settingsFragment;
+                        fragmentTag = "SettingsFragment";
+                        break;
                     default:
-                        fragment = new HomeFragment();
+                        fragment = homeFragment;
+                        fragmentTag = "HomeFragment";
                         break;
                 }
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment, fragmentTag).commit();
                 return true;
             }
         });
