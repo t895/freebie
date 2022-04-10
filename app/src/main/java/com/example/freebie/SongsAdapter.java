@@ -99,14 +99,13 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
             requestOptions = requestOptions.transform(new RoundedCorners(32));
 
             Resources res = context.getResources();
-            Drawable errorFigure = ResourcesCompat.getDrawable(res, android.R.drawable.stat_notify_error, null);
             Drawable placeholderFigure = ResourcesCompat.getDrawable(res, android.R.drawable.ic_menu_gallery, null);
 
             Glide.with(context)
                     .load(song.getAlbumArt())
                     .apply(requestOptions)
                     .placeholder(placeholderFigure)
-                    .error(errorFigure)
+                    .error(placeholderFigure)
                     .into(ivAlbum);
         }
     }
