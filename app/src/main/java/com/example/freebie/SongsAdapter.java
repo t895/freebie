@@ -4,8 +4,6 @@ import static com.example.freebie.MainActivity.currentlyPlayingSong;
 import static com.example.freebie.MainActivity.mediaPlayer;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.freebie.models.Song;
 
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +55,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvTitle;
-        private ImageView ivImage;
+        private ImageView ivAlbum;
         private TextView tvArtist;
         private TextView tvSongLength;
         private RelativeLayout btnSong;
@@ -62,7 +63,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvSongTitle);
-            ivImage = itemView.findViewById(R.id.ivAlbum);
+            ivAlbum = itemView.findViewById(R.id.ivAlbum);
             tvArtist = itemView.findViewById(R.id.tvArtist);
             tvSongLength = itemView.findViewById(R.id.tvSongLength);
             btnSong = itemView.findViewById(R.id.btnSong);
@@ -90,6 +91,14 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     } catch (Exception e) { e.printStackTrace(); }
                 }
             });
+
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions = requestOptions.transform(new RoundedCorners(32));
+
+            Glide.with(context)
+                    .load(song.getAlbumArt())
+                    .apply(requestOptions)
+                    .into(ivAlbum);
         }
     }
     // Clean all elements of the recycler
