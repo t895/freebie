@@ -161,13 +161,15 @@ public class HomeFragment extends Fragment {
 
             do {
                 // Retrieve song path
-                int column_index = songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);//Instead of "MediaStore.Images.Media.DATA" can be used "_data"
+                int column_index = songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
                 filePathUri = Uri.parse(songCursor.getString(column_index));
                 filePath = filePathUri.getPath();
 
+                // Set the working file
+                mediaMetadataRetriever.setDataSource(filePath);
+
                 // Get album art and convert it to a bitmap
                 Bitmap albumBitmap = null;
-                mediaMetadataRetriever.setDataSource(filePath);
                 byte[] albumArtData = mediaMetadataRetriever.getEmbeddedPicture();
 
                 if (albumArtData != null) {
@@ -175,12 +177,25 @@ public class HomeFragment extends Fragment {
                     albumBitmap = Bitmap.createScaledBitmap(albumBitmap, 128, 128, false);
                 }
 
+                // Retrieve song length
+                String duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                long rawLength = Long.parseLong(duration);
+                String seconds = String.valueOf((rawLength % 60000) / 1000);
+                String minutes = String.valueOf(rawLength / 60000);
+                String length;
+                if(seconds.length() == 1)
+                    length = minutes + ":" + "0" + seconds;
+                else
+                    length = minutes + ":" + seconds;
+
                 String title = songCursor.getString(songTitle);
                 String artist = songCursor.getString(songArtist);
-                songs.add(new Song(title, artist, filePath, albumBitmap));
+                String album = songCursor.getString(songAlbum);
+                songs.add(new Song(title, artist, album, length, filePath, albumBitmap));
             } while (songCursor.moveToNext());
         }
         songCursor.close();
+        mediaMetadataRetriever.release();
 
         return songs;
     }
