@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.freebie.R;
 import com.example.freebie.SongsAdapter;
@@ -36,6 +37,7 @@ public class HomeFragment extends Fragment {
 
     public static final String TAG = "HomeFragment";
     private RecyclerView rvSongs;
+    private ProgressBar progressBar;
     private List<Song> allSongs;
     private SongsAdapter adapter;
 
@@ -96,6 +98,7 @@ public class HomeFragment extends Fragment {
         fragmentManager = getParentFragmentManager();
 
         rvSongs = view.findViewById(R.id.rvSongs);
+        progressBar = view.findViewById(R.id.progressBar);
 
         allSongs = new ArrayList<>();
         adapter = new SongsAdapter(getContext(), allSongs);
@@ -132,6 +135,8 @@ public class HomeFragment extends Fragment {
 
                         // Signal refresh has finished
                         adapter.notifyDataSetChanged();
+                        // Disable loading bar when ready
+                        progressBar.setVisibility(View.GONE);
                         Log.i(TAG, "Finished loading songs!");
                     }
                 });
