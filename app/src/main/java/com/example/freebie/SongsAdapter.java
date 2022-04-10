@@ -4,6 +4,8 @@ import static com.example.freebie.MainActivity.currentlyPlayingSong;
 import static com.example.freebie.MainActivity.mediaPlayer;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -95,9 +98,15 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions = requestOptions.transform(new RoundedCorners(32));
 
+            Resources res = context.getResources();
+            Drawable errorFigure = ResourcesCompat.getDrawable(res, android.R.drawable.stat_notify_error, null);
+            Drawable placeholderFigure = ResourcesCompat.getDrawable(res, android.R.drawable.ic_menu_gallery, null);
+
             Glide.with(context)
                     .load(song.getAlbumArt())
                     .apply(requestOptions)
+                    .placeholder(placeholderFigure)
+                    .error(errorFigure)
                     .into(ivAlbum);
         }
     }
