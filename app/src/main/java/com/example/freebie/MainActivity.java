@@ -34,20 +34,27 @@ public class MainActivity extends AppCompatActivity {
     public ArtistsFragment artistsFragment;
     public SettingsFragment settingsFragment;
 
+    private static boolean gettingSongs = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainActivity = this;
 
-        Thread GettingSongsFromDisk = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SongRetrievalService songRetrievalService = SongRetrievalService.getInstance(getApplicationContext());
-                songRetrievalService.getSongs();
-            }
-        });
-        GettingSongsFromDisk.start();
+        Log.i(TAG, "Reloading MainActivity");
+        if(!gettingSongs) {
+            Thread GettingSongsFromDisk = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    gettingSongs = true;
+                    SongRetrievalService songRetrievalService = SongRetrievalService.getInstance(getApplicationContext());
+                    songRetrievalService.getSongs();
+                    gettingSongs = false;
+                }
+            });
+            GettingSongsFromDisk.start();
+        }
 
         mediaPlayer = new MediaPlayer();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);

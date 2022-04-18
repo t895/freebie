@@ -87,7 +87,7 @@ public class SongRetrievalService {
                 // Create song model and add to static array
                 Song song = new Song(title, artist, album, length, filePath, albumBitmap);
                 Song.songArrayList.add(song);
-                Log.i(TAG, "Current songArrayList size - " + Song.songArrayList.size());
+                //Log.i(TAG, "Current songArrayList size - " + Song.songArrayList.size());
             } while (songCursor.moveToNext());
         }
         Log.i(TAG, "Parsing for songs finished with " + Song.songArrayList.size() + " total songs!");

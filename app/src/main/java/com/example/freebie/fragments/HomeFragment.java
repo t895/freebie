@@ -24,6 +24,7 @@ import com.example.freebie.SongsAdapter;
 import com.example.freebie.models.Song;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 public class HomeFragment extends Fragment {
 
@@ -70,10 +71,10 @@ public class HomeFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        refreshSongs();
+        refreshSongs(savedInstanceState);
     }
 
-    public void refreshSongs() {
+    public void refreshSongs(Bundle savedInstanceState) {
         Log.i(TAG, "Rebuilding list!");
         // Remember to CLEAR OUT old items before appending in the new ones
         adapter.clear();
@@ -97,9 +98,20 @@ public class HomeFragment extends Fragment {
                 if(!SongRetrievalService.loadingSongs)
                     mainActivity.runOnUiThread(() -> adapter.addAll(Song.songArrayList));
 
+                // Check for edge case during configuration change happens during disk load
+                if(savedInstanceState != null)
+                    return;
+
                 while(SongRetrievalService.loadingSongs) {
                     // Avoid crash if changing tab while refreshing
-                    Fragment fragment = fragmentManager.findFragmentByTag(TAG);
+                    Fragment fragment;
+                    try {
+                        fragment = fragmentManager.findFragmentByTag(TAG);
+                    } catch (ConcurrentModificationException e) {
+                        Log.w(TAG, "Breaking out of thread,"
+                                + " FragmentManager was checked by two threads at once");
+                        return;
+                    }
                     if(fragment == null) {
                         Log.w(TAG, "Breaking out of thread, fragment switched during loading");
                         return;
