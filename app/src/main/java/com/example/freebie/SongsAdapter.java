@@ -127,7 +127,5 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public void add(Song song) {
-        this.songs.add(song);
-    }
+    public void add(Song song) { this.songs.add(song); }
 }
