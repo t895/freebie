@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment {
                 // forcefully delay the loading of the song list to hold back some processing.
                 // If anyone has a better way of doing this, I would be incredibly grateful.
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(125);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
