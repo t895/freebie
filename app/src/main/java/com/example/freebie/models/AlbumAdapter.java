@@ -52,9 +52,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
 
     }
     @Override
-    public int getItemCount(){
-        return albumFiles.size();
-    }
+    public int getItemCount(){ return albumFiles.size(); }
 
     class MyHolder extends RecyclerView.ViewHolder{
 
@@ -100,8 +98,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
                     .error(placeholderFigure)
                     .into(albumImage);
         }
-        }
     }
+
     // Clean all elements of the recycler
     public void clear() {
         albumFiles.clear();
