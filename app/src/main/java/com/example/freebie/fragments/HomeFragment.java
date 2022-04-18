@@ -104,24 +104,27 @@ public class HomeFragment extends Fragment {
                         Log.w(TAG, "Breaking out of thread, fragment switched during loading");
                         return;
                     }
-
-                    int startSize = adapter.songs.size();
-                    int endSize = Song.songArrayList.size() - 1;
-                    if(startSize < endSize) {
-                        mainActivity.runOnUiThread(() -> {
-                            for (int i = adapter.songs.size(); i < Song.songArrayList.size(); i++) {
-                                adapter.add(Song.songArrayList.get(i));
-                                adapter.notifyItemInserted(i);
-                            }
-                            if (adapter.songs.size() > 0 && progressBar.getVisibility() == View.VISIBLE)
-                                progressBar.setVisibility(View.GONE);
-                        });
-                    }
+                    loadRemainingSongs();
                 }
                 mainActivity.runOnUiThread(() -> progressBar.setVisibility(View.GONE));
                 Log.i(TAG, "Finished loading list with " + adapter.songs.size() + " songs!");
             }
         });
         RefreshingHomeFragment.start();
+    }
+
+    private void loadRemainingSongs() {
+        int startSize = adapter.songs.size();
+        int endSize = Song.songArrayList.size();
+        if(startSize < endSize) {
+            mainActivity.runOnUiThread(() -> {
+                for (int i = adapter.songs.size(); i < Song.songArrayList.size(); i++) {
+                    adapter.add(Song.songArrayList.get(i));
+                    adapter.notifyItemInserted(i);
+                }
+                if (adapter.songs.size() > 0 && progressBar.getVisibility() == View.VISIBLE)
+                    progressBar.setVisibility(View.GONE);
+            });
+        }
     }
 }
