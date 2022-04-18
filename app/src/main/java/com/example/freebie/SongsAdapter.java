@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.freebie.models.Song;
 
@@ -39,9 +40,18 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     private Context context;
     public ArrayList<Song> songs;
 
+    private RequestOptions requestOptions;
+    private Drawable placeholderFigure;
+
     public SongsAdapter(Context context, ArrayList<Song> songs) {
         this.context = context;
         this.songs = songs;
+
+        requestOptions = new RequestOptions();
+        requestOptions.transform(new RoundedCorners(32));
+
+        Resources res = context.getResources();
+        placeholderFigure = ResourcesCompat.getDrawable(res, android.R.drawable.ic_menu_gallery, null);
     }
 
     @NonNull
@@ -100,12 +110,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     } catch (Exception e) { e.printStackTrace(); }
                 }
             });
-
-            RequestOptions requestOptions = new RequestOptions();
-            requestOptions = requestOptions.transform(new RoundedCorners(32));
-
-            Resources res = context.getResources();
-            Drawable placeholderFigure = ResourcesCompat.getDrawable(res, android.R.drawable.ic_menu_gallery, null);
 
             Glide.with(context)
                     .load(song.getAlbumArt())
