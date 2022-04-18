@@ -1,11 +1,16 @@
 package com.example.freebie;
 
 import static com.example.freebie.MainActivity.currentlyPlayingSong;
+import static com.example.freebie.MainActivity.mainActivity;
 import static com.example.freebie.MainActivity.mediaPlayer;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +29,17 @@ import com.example.freebie.models.Song;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> {
 
-    private Context context;
-    private List<Song> songs;
+    public static final String TAG = "SongsAdapter";
 
-    public SongsAdapter(Context context, List<Song> songs) {
+    private Context context;
+    public ArrayList<Song> songs;
+
+    public SongsAdapter(Context context, ArrayList<Song> songs) {
         this.context = context;
         this.songs = songs;
     }
@@ -51,9 +59,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     }
 
     @Override
-    public int getItemCount() {
-        return songs.size();
-    }
+    public int getItemCount() { return songs.size(); }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -111,7 +117,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     }
     // Clean all elements of the recycler
     public void clear() {
-        songs.clear();
+        this.songs.clear();
         notifyDataSetChanged();
     }
 
@@ -119,5 +125,9 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     public void addAll(List<Song> songs) {
         this.songs.addAll(songs);
         notifyDataSetChanged();
+    }
+
+    public void add(Song song) {
+        this.songs.add(song);
     }
 }

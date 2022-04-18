@@ -1,5 +1,7 @@
 package com.example.freebie;
 
+import static com.example.freebie.MainActivity.mainActivity;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,9 +18,11 @@ import android.widget.Toast;
 
 public class SetupActivity extends AppCompatActivity {
 
+    public static final String TAG = "SetupActivity";
     public static final int READ_EXTERNAL_STORAGE_PERMISSION_REQUEST = 42;
 
     private Button btnPermission;
+    private boolean startButtonClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +43,10 @@ public class SetupActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(setupActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION_REQUEST);
                 } else {
                     // Button enters main activity when permissions are granted
+                    if(startButtonClicked) // Avoid running multiple times
+                        return;
                     goToMainActivity();
+                    startButtonClicked = true;
                 }
             }
         });
@@ -54,7 +61,6 @@ public class SetupActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.permission_denied_toast, Toast.LENGTH_LONG).show();
         }
     }
-
 
     private void goToMainActivity() {
         Intent i = new Intent(this, MainActivity.class);

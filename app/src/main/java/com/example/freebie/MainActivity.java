@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.freebie.fragments.AlbumsFragment;
 import com.example.freebie.fragments.ArtistsFragment;
@@ -21,19 +24,30 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
     final FragmentManager fragmentManager = getSupportFragmentManager();
+    public static MainActivity mainActivity;
 
     public static MediaPlayer mediaPlayer;
     public static Song currentlyPlayingSong;
 
-    public Fragment homeFragment;
-    public Fragment albumsFragment;
-    public Fragment artistsFragment;
-    public Fragment settingsFragment;
+    public HomeFragment homeFragment;
+    public AlbumsFragment albumsFragment;
+    public ArtistsFragment artistsFragment;
+    public SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainActivity = this;
+
+        Thread GettingSongsFromDisk = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SongRetrievalService songRetrievalService = SongRetrievalService.getInstance(getApplicationContext());
+                songRetrievalService.getSongs();
+            }
+        });
+        GettingSongsFromDisk.start();
 
         mediaPlayer = new MediaPlayer();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
@@ -49,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment = null;
                 String fragmentTag = null;
-                // TODO: Find a better way to set tags
                 switch (item.getItemId()) {
                     case R.id.action_home:
                         fragment = homeFragment;
