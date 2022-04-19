@@ -10,17 +10,21 @@ public class Album {
 
     private String title;
     private String artist;
-    private Bitmap albumArt;
+    private Bitmap highResAlbumArt;
+    private Bitmap lowResAlbumArt;
 
-    public Album(String title, String artist, Bitmap albumArt){
+    public Album(String title, String artist, Bitmap highResAlbumArt, Bitmap lowResAlbumArt){
         this.title = title;
         this.artist = artist;
-        this.albumArt = albumArt;
+        this.highResAlbumArt = highResAlbumArt;
+        this.lowResAlbumArt = lowResAlbumArt;
     }
 
     public String getTitle() { return title; }
 
     public String getArtist() { return artist; }
 
-    public Bitmap getAlbumArt() { return albumArt; }
+    public Bitmap getHighResAlbumArt() { return highResAlbumArt; }
+
+    public Bitmap getLowResAlbumArt() { return lowResAlbumArt; }
 }

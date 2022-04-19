@@ -19,20 +19,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Queue;
+
 import okhttp3.Headers;
 
 public class SongRetrievalService {
 
     public static final String TAG = "SongRetrievalService";
-    public static SongRetrievalService songRetrievalService;
-    private static Context context;
-
-    public static boolean loadingSongs = false;
 
     public static final String BASE_URL = "https://api.discogs.com/database/";
     public static final String API_KEY = "DHqvPIxOJwmIMQHtHkkoewRydAnSCRwFXnNAOUCI";
 
-    public static final String TARGET_URL = "https://api.discogs.com/database/search?q=Joe%20Hisaishi&per_page=1&token=DHqvPIxOJwmIMQHtHkkoewRydAnSCRwFXnNAOUCI";
+    public static SongRetrievalService songRetrievalService;
+    private static Context context;
+
+    public static boolean loadingSongs = false;
 
     public SongRetrievalService(Context context) { SongRetrievalService.context = context; }
 
@@ -89,35 +90,7 @@ public class SongRetrievalService {
                 else
                     length = minutes + ":" + seconds;
 
-                // Retrieve low res album art
-                // TODO: Decode images on background thread; images HEAVILY slow down list loading
-                Bitmap lowResAlbumBitmap = null;
-                Bitmap highResAlbumBitmap = null;
-                byte[] albumArtData = mediaMetadataRetriever.getEmbeddedPicture();
-
-                if (albumArtData != null) {
-                    highResAlbumBitmap = BitmapFactory.decodeByteArray(albumArtData, 0, albumArtData.length);
-                    lowResAlbumBitmap = Bitmap.createScaledBitmap(highResAlbumBitmap, 128, 128, false);
-                }
-
-                // Create song model and add to static array
-                Song song = new Song(titleString, artistString, albumString, length, filePath, lowResAlbumBitmap);
-                Song.songArrayList.add(song);
-
-                if (Album.albumArrayList.size() == 0) {
-                    Album albumItem = new Album(albumString, artistString, highResAlbumBitmap);
-                    Album.albumArrayList.add(albumItem);
-                } else {
-                    for (int i = 0; i < Album.albumArrayList.size(); i++) {
-                        if (Album.albumArrayList.get(i).getTitle().equals(albumString))
-                            break;
-                        if(i == Album.albumArrayList.size() - 1) {
-                            Album albumItem = new Album(albumString, artistString, highResAlbumBitmap);
-                            Album.albumArrayList.add(albumItem);
-                        }
-                    }
-                }
-
+                // Find unique artists to add into artist collection
                 if (Artist.artistArrayList.size() == 0) {
                     getArtistDetails(artistString);
                 } else {
@@ -129,12 +102,65 @@ public class SongRetrievalService {
                         }
                     }
                 }
+
+                // Find unique albums to add into album collection and decode relevant album art
+                Bitmap highResAlbumBitmap = null;
+                Bitmap lowResAlbumBitmap = null;
+                if (Album.albumArrayList.size() == 0) {
+                    highResAlbumBitmap = loadFullResAlbumArt(mediaMetadataRetriever, highResAlbumBitmap);
+                    lowResAlbumBitmap = loadLowResAlbumArt(mediaMetadataRetriever, lowResAlbumBitmap);
+                    Album albumItem = new Album(albumString, artistString, highResAlbumBitmap, lowResAlbumBitmap);
+                    Album.albumArrayList.add(albumItem);
+                } else {
+                    for (int i = 0; i < Album.albumArrayList.size(); i++) {
+                        if (Album.albumArrayList.get(i).getTitle().equals(albumString))
+                            break;
+                        if(i == Album.albumArrayList.size() - 1) {
+                            highResAlbumBitmap = loadFullResAlbumArt(mediaMetadataRetriever, highResAlbumBitmap);
+                            lowResAlbumBitmap = loadLowResAlbumArt(mediaMetadataRetriever, lowResAlbumBitmap);
+                            Album albumItem = new Album(albumString, artistString, highResAlbumBitmap, lowResAlbumBitmap);
+                            Album.albumArrayList.add(albumItem);
+                        }
+                    }
+                }
+
+                // Prevent decoding the same bitmap multiple times
+                for(int i = 0; i < Album.albumArrayList.size(); i++) {
+                    if (Album.albumArrayList.get(i).getTitle().equals(albumString)) {
+                        lowResAlbumBitmap = Album.albumArrayList.get(i).getLowResAlbumArt();
+                        break;
+                    }
+                    if(i == Album.albumArrayList.size() - 1)
+                        lowResAlbumBitmap = loadLowResAlbumArt(mediaMetadataRetriever, lowResAlbumBitmap);
+                }
+                Song song = new Song(titleString, artistString, albumString, length, filePath, lowResAlbumBitmap);
+                Song.songArrayList.add(song);
             } while (songCursor.moveToNext());
         }
         Log.i(TAG, "Parsing for songs finished with " + Song.songArrayList.size() + " total songs!");
         songCursor.close();
         mediaMetadataRetriever.release();
         loadingSongs = false;
+    }
+
+    private Bitmap loadLowResAlbumArt(MediaMetadataRetriever mediaMetadataRetriever, Bitmap bitmap) {
+        byte[] songAlbumArtData = mediaMetadataRetriever.getEmbeddedPicture();
+        if (songAlbumArtData != null) {
+            bitmap = BitmapFactory.decodeByteArray(songAlbumArtData,
+                    0, songAlbumArtData.length);
+            bitmap = Bitmap.createScaledBitmap(bitmap,
+                    128, 128, false);
+        }
+        return bitmap;
+    }
+
+    private Bitmap loadFullResAlbumArt(MediaMetadataRetriever mediaMetadataRetriever, Bitmap bitmap) {
+        byte[] songAlbumArtData = mediaMetadataRetriever.getEmbeddedPicture();
+        if (songAlbumArtData != null) {
+            bitmap = BitmapFactory.decodeByteArray(songAlbumArtData,
+                    0, songAlbumArtData.length);
+        }
+        return bitmap;
     }
 
     private void getArtistDetails(String artistString) {

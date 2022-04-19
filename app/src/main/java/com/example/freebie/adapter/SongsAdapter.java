@@ -5,7 +5,9 @@ import static com.example.freebie.MainActivity.mediaPlayer;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
     private RequestOptions requestOptions;
     private Drawable placeholderFigure;
+    private MediaMetadataRetriever imageRetriever;
 
     public SongsAdapter(Context context, ArrayList<Song> songs) {
         this.context = context;
@@ -47,6 +50,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
         Resources res = context.getResources();
         placeholderFigure = ResourcesCompat.getDrawable(res, android.R.drawable.ic_menu_gallery, null);
+
+        imageRetriever = new MediaMetadataRetriever();
     }
 
     @NonNull
@@ -114,6 +119,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     .into(ivAlbum);
         }
     }
+
     // Clean all elements of the recycler
     public void clear() {
         this.songs.clear();

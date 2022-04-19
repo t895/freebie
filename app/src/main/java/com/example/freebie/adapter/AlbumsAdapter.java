@@ -92,7 +92,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder
             });
 
             Glide.with(context)
-                    .load(album.getAlbumArt())
+                    .load(album.getHighResAlbumArt())
                     .apply(requestOptions)
                     .placeholder(placeholderFigure)
                     .error(placeholderFigure)
