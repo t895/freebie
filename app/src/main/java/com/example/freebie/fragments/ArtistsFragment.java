@@ -72,12 +72,6 @@ public class ArtistsFragment extends Fragment {
         Thread RefreshingHomeFragment = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
                 // Just load the current values if nothing from disk is being loaded
                 if(!SongRetrievalService.loadingSongs)
                     mainActivity.runOnUiThread(() -> adapter.addAll(Artist.artistArrayList));
