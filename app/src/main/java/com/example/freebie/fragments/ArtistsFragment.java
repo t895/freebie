@@ -93,7 +93,7 @@ public class ArtistsFragment extends Fragment {
                         mainActivity.runOnUiThread(() -> {
                             for (int i = adapter.artists.size(); i < Artist.artistArrayList.size(); i++) {
                                 adapter.add(Artist.artistArrayList.get(i));
-                                adapter.notifyItemInserted(i);
+                                adapter.notifyDataSetChanged();
                             }
                             if (adapter.artists.size() > 0 && progressBar.getVisibility() == View.VISIBLE)
                                 progressBar.setVisibility(View.GONE);
