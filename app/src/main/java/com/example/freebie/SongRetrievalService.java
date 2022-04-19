@@ -188,9 +188,13 @@ public class SongRetrievalService {
                     JSONArray results = jsonObject.getJSONArray("results");
                     JSONObject artistData = results.getJSONObject(0);
                     artistPicture = artistData.getString("cover_image");
+                    if (artistPicture.contains(".gif"))
+                        artistPicture = null;
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit json exception", e);
                     e.printStackTrace();
+                    Artist.artistArrayList.get(finalCurrentSongIndex).setProfilePicture(null);
+                    return;
                 }
                 Artist.artistArrayList.get(finalCurrentSongIndex).setProfilePicture(artistPicture);
             }
