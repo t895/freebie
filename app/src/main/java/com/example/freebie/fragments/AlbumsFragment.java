@@ -28,7 +28,6 @@ public class AlbumsFragment extends Fragment {
     private static final String TAG = "AlbumsFragment";
 
     private RecyclerView rvAlbums;
-    private ProgressBar progressBar;
     private ArrayList<Album> allAlbums;
     private AlbumsAdapter adapter;
 
@@ -51,15 +50,13 @@ public class AlbumsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         rvAlbums = view.findViewById(R.id.rvAlbums);
-        progressBar = view.findViewById(R.id.progressBar);
 
         allAlbums = new ArrayList<>();
         adapter = new AlbumsAdapter(getContext(), allAlbums);
+        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
 
         rvAlbums.setAdapter(adapter);
         rvAlbums.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
-        progressBar.setVisibility(View.VISIBLE);
 
         refreshAlbums(savedInstanceState);
     }
@@ -89,12 +86,9 @@ public class AlbumsFragment extends Fragment {
                                 adapter.add(Album.albumArrayList.get(i));
                                 adapter.notifyItemInserted(i);
                             }
-                            if (adapter.albums.size() > 0 && progressBar.getVisibility() == View.VISIBLE)
-                                progressBar.setVisibility(View.GONE);
                         });
                     }
                 }
-                mainActivity.runOnUiThread(() -> progressBar.setVisibility(View.GONE));
                 Log.i(TAG, "Finished loading list with " + adapter.albums.size() + " songs!");
             }
         });

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment {
 
     public static final String TAG = "HomeFragment";
+    public static final String LIST_STATE_KEY = "home_recycler_list_state";
+    Parcelable listState;
 
     private RecyclerView rvSongs;
     private ProgressBar progressBar;
@@ -57,6 +60,7 @@ public class HomeFragment extends Fragment {
 
         allSongs = new ArrayList<>();
         adapter = new SongsAdapter(getContext(), allSongs);
+        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
 
         rvSongs.setAdapter(adapter);
         rvSongs.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -86,8 +90,9 @@ public class HomeFragment extends Fragment {
                 }
 
                 // Just load the current values if nothing from disk is being loaded
-                if(!SongRetrievalService.loadingSongs)
+                if(!SongRetrievalService.loadingSongs) {
                     mainActivity.runOnUiThread(() -> adapter.addAll(Song.songArrayList));
+                }
 
                 // Check for edge case during configuration change happens during disk load
                 if(savedInstanceState != null)

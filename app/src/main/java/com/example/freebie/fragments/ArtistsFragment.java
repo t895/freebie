@@ -28,7 +28,6 @@ public class ArtistsFragment extends Fragment {
     private static final String TAG = "ArtistsFragment";
 
     private RecyclerView rvArtists;
-    private ProgressBar progressBar;
     private ArrayList<Artist> allArtists;
     private ArtistsAdapter adapter;
 
@@ -51,15 +50,13 @@ public class ArtistsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         rvArtists = view.findViewById(R.id.rvArtists);
-        progressBar = view.findViewById(R.id.progressBar);
 
         allArtists = new ArrayList<>();
         adapter = new ArtistsAdapter(getContext(), allArtists);
+        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
 
         rvArtists.setAdapter(adapter);
         rvArtists.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
-        progressBar.setVisibility(View.VISIBLE);
 
         refreshArtists(savedInstanceState);
     }
@@ -89,12 +86,9 @@ public class ArtistsFragment extends Fragment {
                                 adapter.add(Artist.artistArrayList.get(i));
                                 adapter.notifyDataSetChanged();
                             }
-                            if (adapter.artists.size() > 0 && progressBar.getVisibility() == View.VISIBLE)
-                                progressBar.setVisibility(View.GONE);
                         });
                     }
                 }
-                mainActivity.runOnUiThread(() -> progressBar.setVisibility(View.GONE));
                 Log.i(TAG, "Finished loading list with " + adapter.artists.size() + " artists!");
             }
         });

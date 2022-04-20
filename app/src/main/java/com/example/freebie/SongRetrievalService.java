@@ -1,6 +1,7 @@
 package com.example.freebie;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,10 +31,15 @@ public class SongRetrievalService {
     public static final String BASE_URL = "https://api.discogs.com/database/";
     public static final String API_KEY = "DHqvPIxOJwmIMQHtHkkoewRydAnSCRwFXnNAOUCI";
 
+    public static final String SONGS_LOADED = "songs_loaded";
+    public static final String SIZE_KEY = "size";
+
     public static SongRetrievalService songRetrievalService;
     private static Context context;
 
     public static boolean loadingSongs = false;
+
+    private static SharedPreferences sharedPreferences;
 
     public SongRetrievalService(Context context) { SongRetrievalService.context = context; }
 
@@ -45,6 +51,12 @@ public class SongRetrievalService {
     }
 
     public void getSongs() {
+        // Check if previously loaded songs are still in memory
+        sharedPreferences = context.getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
+        int previousListSize = sharedPreferences.getInt(SIZE_KEY, 0);
+        if (previousListSize == Song.songArrayList.size() && Song.songArrayList.size() != 0)
+            return;
+
         Log.i(TAG, "Getting songs from disk!");
         loadingSongs = true;
 
@@ -141,6 +153,13 @@ public class SongRetrievalService {
         songCursor.close();
         mediaMetadataRetriever.release();
         loadingSongs = false;
+
+        sharedPreferences = context.getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
+        SharedPreferences.Editor myEdit = sharedPreferences.edit();
+
+        myEdit.putInt(SIZE_KEY, Song.songArrayList.size());
+
+        myEdit.apply();
     }
 
     private Bitmap loadLowResAlbumArt(MediaMetadataRetriever mediaMetadataRetriever, Bitmap bitmap) {
