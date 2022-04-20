@@ -90,7 +90,12 @@ public class MainActivity extends AppCompatActivity {
                         fragmentTag = "HomeFragment";
                         break;
                 }
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment, fragmentTag).commit();
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(
+                                R.anim.fade_in,
+                                R.anim.fade_out
+                        )
+                        .replace(R.id.flContainer, fragment, fragmentTag).commit();
                 return true;
             }
         });
