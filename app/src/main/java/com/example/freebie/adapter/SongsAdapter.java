@@ -1,8 +1,5 @@
 package com.example.freebie.adapter;
 
-import static com.example.freebie.MainActivity.currentlyPlayingSong;
-import static com.example.freebie.MainActivity.mediaPlayer;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
@@ -22,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.freebie.MediaPlayerService;
 import com.example.freebie.R;
 import com.example.freebie.models.Song;
 
@@ -98,15 +96,15 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                 public void onClick(View view) {
                     try {
                         // Reset the song that the media player is referencing
-                        mediaPlayer.reset();
+                        MediaPlayerService.mediaPlayer.reset();
 
                         // Set the correct song path and start the player
-                        mediaPlayer.setDataSource(song.getPath());
-                        mediaPlayer.prepare();
-                        mediaPlayer.start();
+                        MediaPlayerService.mediaPlayer.setDataSource(song.getPath());
+                        MediaPlayerService.mediaPlayer.prepare();
+                        MediaPlayerService.mediaPlayer.start();
 
                         // Track the currently playing song globally
-                        currentlyPlayingSong = song;
+                        MediaPlayerService.currentlyPlayingSong = song;
                     } catch (Exception e) { e.printStackTrace(); }
                 }
             });

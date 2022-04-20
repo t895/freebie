@@ -24,9 +24,6 @@ public class MainActivity extends AppCompatActivity {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     public static MainActivity mainActivity;
 
-    public static MediaPlayer mediaPlayer;
-    public static Song currentlyPlayingSong;
-
     public HomeFragment homeFragment;
     public AlbumsFragment albumsFragment;
     public ArtistsFragment artistsFragment;
@@ -54,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
             GettingSongsFromDisk.start();
         }
 
-        mediaPlayer = new MediaPlayer();
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
+        MediaPlayerService mediaPlayerService = MediaPlayerService.getInstance(getApplicationContext());
 
         // Create each fragment in advance
         homeFragment = new HomeFragment();
@@ -63,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         artistsFragment = new ArtistsFragment();
         settingsFragment = new SettingsFragment();
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -101,11 +98,5 @@ public class MainActivity extends AppCompatActivity {
         });
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_home);
-
-        // Set currently playing song to nothing when song completes
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) { currentlyPlayingSong = null; }
-        });
     }
 }
