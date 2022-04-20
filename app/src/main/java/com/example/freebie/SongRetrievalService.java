@@ -168,7 +168,7 @@ public class SongRetrievalService {
             bitmap = BitmapFactory.decodeByteArray(songAlbumArtData,
                     0, songAlbumArtData.length);
             bitmap = Bitmap.createScaledBitmap(bitmap,
-                    128, 128, false);
+                    100, 100, false);
         }
         return bitmap;
     }

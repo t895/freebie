@@ -18,56 +18,42 @@
         android:layout_centerVertical="true"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tvArtist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/tvSongTitle"
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/ivAlbum"
-        android:orientation="vertical">
+        android:autoLink="all"
+        android:ellipsize="end"
+        android:linksClickable="true"
+        android:maxWidth="224dp"
+        android:maxLines="1"
+        tools:text="Artist Name" />
 
-        <TextView
-            android:id="@+id/tvSongTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxWidth="224dp"
-            android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="16sp"
-            tools:text="Song Title" />
-
-        <TextView
-            android:id="@+id/tvArtist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:autoLink="all"
-            android:ellipsize="end"
-            android:linksClickable="true"
-            android:maxWidth="224dp"
-            android:maxLines="1"
-            tools:text="Artist Name" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvSongTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivAlbum"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@+id/ivAlbum"
+        android:ellipsize="end"
+        android:maxWidth="224dp"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="16sp"
+        tools:text="Song Title" />
 
     <TextView
         android:id="@+id/tvSongLength"
         android:layout_width="36dp"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@+id/btnLike"
-        android:textAlignment="textEnd"
-        tools:text="53:46" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLike"
-        style="@style/Widget.Material3.Button.Icon"
-        android:layout_width="50dp"
-
-        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        app:icon="@drawable/ic_action_favorite_outline" />
+        android:textAlignment="textEnd"
+        tools:text="53:46" />
 
 </RelativeLayout>

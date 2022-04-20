@@ -31,7 +31,6 @@ public class HomeFragment extends Fragment {
     Parcelable listState;
 
     private RecyclerView rvSongs;
-    private ProgressBar progressBar;
     private ArrayList<Song> allSongs;
     private SongsAdapter adapter;
 
@@ -56,7 +55,6 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         rvSongs = view.findViewById(R.id.rvSongs);
-        progressBar = view.findViewById(R.id.progressBar);
 
         allSongs = new ArrayList<>();
         adapter = new SongsAdapter(getContext(), allSongs);
@@ -64,8 +62,6 @@ public class HomeFragment extends Fragment {
 
         rvSongs.setAdapter(adapter);
         rvSongs.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        progressBar.setVisibility(View.VISIBLE);
 
         refreshSongs(savedInstanceState);
     }
@@ -78,17 +74,6 @@ public class HomeFragment extends Fragment {
         Thread RefreshingHomeFragment = new Thread(new Runnable() {
             @Override
             public void run() {
-                // Somehow, some way, it seems like this is the only way to prevent stuttering
-                // on the UI thread. All of the background tasks are moved onto separate threads,
-                // but the BottomNavigationView is exceptionally good at stuttering. So I have to
-                // forcefully delay the loading of the song list to hold back some processing.
-                // If anyone has a better way of doing this, I would be incredibly grateful.
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
                 // Just load the current values if nothing from disk is being loaded
                 if(!SongRetrievalService.loadingSongs) {
                     mainActivity.runOnUiThread(() -> adapter.addAll(Song.songArrayList));
@@ -107,12 +92,9 @@ public class HomeFragment extends Fragment {
                                 adapter.add(Song.songArrayList.get(i));
                                 adapter.notifyItemInserted(i);
                             }
-                            if (adapter.songs.size() > 0 && progressBar.getVisibility() == View.VISIBLE)
-                                progressBar.setVisibility(View.GONE);
                         });
                     }
                 }
-                mainActivity.runOnUiThread(() -> progressBar.setVisibility(View.GONE));
                 Log.i(TAG, "Finished loading list with " + adapter.songs.size() + " songs!");
             }
         });
