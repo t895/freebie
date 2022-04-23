@@ -20,8 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Queue;
-
 import okhttp3.Headers;
 
 public class SongRetrievalService {
@@ -137,15 +135,14 @@ public class SongRetrievalService {
                 }
 
                 // Prevent decoding the same bitmap multiple times
+                Album songAlbum = null;
                 for(int i = 0; i < Album.albumArrayList.size(); i++) {
                     if (Album.albumArrayList.get(i).getTitle().equals(albumString)) {
-                        lowResAlbumBitmap = Album.albumArrayList.get(i).getLowResAlbumArt();
+                        songAlbum = Album.albumArrayList.get(i);
                         break;
                     }
-                    if(i == Album.albumArrayList.size() - 1)
-                        lowResAlbumBitmap = loadLowResAlbumArt(mediaMetadataRetriever, lowResAlbumBitmap);
                 }
-                Song song = new Song(titleString, artistString, albumString, length, filePath, lowResAlbumBitmap);
+                Song song = new Song(titleString, artistString, songAlbum, length, filePath);
                 Song.songArrayList.add(song);
             } while (songCursor.moveToNext());
         }
