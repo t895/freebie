@@ -24,9 +24,22 @@ Basic local music player
 
 **Required Must-have Stories**
 
-- [x] Now playing screen
+* User permission
+    - [x] Ask permission for user's music storage
+    
+* Now playing screen 
     - [x] Album art
-    - [x] Play/pause (shuffle, repeat?)
+    - [x] Play/pause
+    - [x] Song's name
+
+* Home page (recycler view)
+    - [x] List of songs
+
+* Album page
+    - [x] List of albums with album art
+    
+* Artist page
+    - [x] Artist profile
 
 - [x] screen with list of songs (recycler view)
     - [] search songs
@@ -58,9 +71,11 @@ Basic local music player
 
 * Home Screen - Stream
    * Screen with list of songs
-* Now playing - detail
+* Now playing 
+    - detail
     * album art
     * play/pause
+    * song name
 - Albums 
     - screen with grid of albums
 - settings
@@ -80,7 +95,6 @@ Basic local music player
    * transition to now playing
 
 ## Wireframes
-[Add picture of your hand sketched wireframes in this section]
 <img src="https://imgur.com/g2hgb1f.jpeg" width=600>
 
 ## Schema 
@@ -113,8 +127,9 @@ Basic local music player
 ## Networking
 ### Discogs API 
 ### used to get artist images
+### discogs.com
+#### https://www.discogs.com/forum/topic/1082
 
-
-** Demo **
+** Final Walkthrough GIF **
 
 <img src="Demo2.gif" width=200>
