@@ -27,7 +27,7 @@ Basic local music player
 **Required Must-have Stories**
 
 * Now playing screen 
-    [x] Album art
+    - [x] Album art
     [x] Play/pause (shuffle, repeat?)
     [x] Song's name
 
