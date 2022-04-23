@@ -29,10 +29,16 @@ Basic local music player
 * Now playing screen
     * Album art
     * Play/pause (shuffle, repeat?)
-    * Progress bar (scrubbing/seeking)
-    * Queue for next song
-* screen with list of songs (recycler view)
-    * search songs
+    * Song's name
+
+* Home page (recycler view)
+    * List of songs
+
+* Album page
+    * List of albums with album art
+    
+* Artist page
+    * Artist profile
 
 **Optional Nice-to-have Stories**
 
@@ -58,16 +64,16 @@ Basic local music player
 
 * Home Screen - Stream
    * Screen with list of songs
-* Now playing - detail
-    * album art
-    * progress bar
-    * play/pause
+* Now playing - Detail
+    * Album art
+    * Play/Pause
+    * Song's name 
 
 ### 3. Navigation
 
 **Tab Navigation** (Tab to Screen)
 
-* Home (tracks?, analytics)
+* Home 
 * Albums
 * Artists
 * Settings
