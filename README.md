@@ -84,7 +84,6 @@ Basic local music player
    * transition to now playing
 
 ## Wireframes
-[Add picture of your hand sketched wireframes in this section]
 <img src="https://imgur.com/g2hgb1f.jpeg" width=600>
 
 ## Schema 
@@ -117,9 +116,12 @@ Basic local music player
 ### Last.fm
 #### https://www.last.fm/api
 
-### Week 7 Demo
+### discogs.com
+#### https://www.discogs.com/forum/topic/1082
 
+### Week 7 Demo
 <img src="Demo.gif" width=200>
+
 
 ### Final Walkthough GIF
 <img src="https://github.com/CodepathAndroid2022FinalProject/freebie/blob/main/Demo2.gif" width=250><br>
