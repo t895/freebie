@@ -26,10 +26,10 @@ Basic local music player
 
 **Required Must-have Stories**
 
-* Now playing screen
-    * Album art
-    * Play/pause (shuffle, repeat?)
-    * Song's name
+* Now playing screen 
+    [x] Album art
+    [x] Play/pause (shuffle, repeat?)
+    [x] Song's name
 
 * Home page (recycler view)
     * List of songs
@@ -120,3 +120,7 @@ Basic local music player
 ** Week 7 Demo **
 
 <img src="Demo.gif" width=200>
+
+** Final demo gif**
+<img src="https://github.com/CodepathAndroid2022FinalProject/freebie/blob/main/Demo2.gif" width=250><br>
+
