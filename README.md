@@ -28,17 +28,17 @@ Basic local music player
 
 * Now playing screen 
     - [x] Album art
-    [x] Play/pause (shuffle, repeat?)
-    [x] Song's name
+    - [x] Play/pause (shuffle, repeat?)
+    - [x] Song's name
 
 * Home page (recycler view)
-    * List of songs
+    - [x] List of songs
 
 * Album page
-    * List of albums with album art
+    - [x] List of albums with album art
     
 * Artist page
-    * Artist profile
+    - [x] Artist profile
 
 **Optional Nice-to-have Stories**
 
@@ -117,10 +117,10 @@ Basic local music player
 ### Last.fm
 #### https://www.last.fm/api
 
-** Week 7 Demo **
+### Week 7 Demo
 
 <img src="Demo.gif" width=200>
 
-** Final demo gif**
+### Final Walkthough GIF
 <img src="https://github.com/CodepathAndroid2022FinalProject/freebie/blob/main/Demo2.gif" width=250><br>
 
