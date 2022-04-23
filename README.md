@@ -18,7 +18,6 @@ Basic local music player
 - **Category:** Entertainment
 - **Mobile:** This app will be exclusively designed for mobile.
 - **Market:** People who want to listen to music offline or avoid subscription music services
-- **Scope:**
 
 ## Product Spec
 
@@ -26,9 +25,12 @@ Basic local music player
 
 **Required Must-have Stories**
 
+* User permission
+    - [x] Ask permission for user's music storage
+    
 * Now playing screen 
     - [x] Album art
-    - [x] Play/pause (shuffle, repeat?)
+    - [x] Play/pause
     - [x] Song's name
 
 * Home page (recycler view)
