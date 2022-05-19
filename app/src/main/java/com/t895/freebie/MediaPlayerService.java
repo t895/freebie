@@ -1,6 +1,6 @@
-package com.example.freebie;
+package com.t895.freebie;
 
-import static com.example.freebie.MainActivity.mainActivity;
+import static com.t895.freebie.MainActivity.mainActivity;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.example.freebie.models.Song;
+import com.t895.freebie.models.Song;
 import com.sothree.slidinguppanel.PanelState;
 
 public class MediaPlayerService {

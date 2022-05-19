@@ -1,6 +1,4 @@
-package com.example.freebie.models;
-
-import android.graphics.Bitmap;
+package com.t895.freebie.models;
 
 import java.util.ArrayList;
 

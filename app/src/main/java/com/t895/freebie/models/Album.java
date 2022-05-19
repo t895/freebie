@@ -1,4 +1,4 @@
-package com.example.freebie.models;
+package com.t895.freebie.models;
 
 import android.graphics.Bitmap;
 

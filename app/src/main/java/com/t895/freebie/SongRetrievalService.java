@@ -1,4 +1,4 @@
-package com.example.freebie;
+package com.t895.freebie;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,9 +12,9 @@ import android.util.Log;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-import com.example.freebie.models.Album;
-import com.example.freebie.models.Artist;
-import com.example.freebie.models.Song;
+import com.t895.freebie.models.Album;
+import com.t895.freebie.models.Artist;
+import com.t895.freebie.models.Song;
 
 import org.json.JSONArray;
 import org.json.JSONException;

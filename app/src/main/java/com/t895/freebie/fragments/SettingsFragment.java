@@ -1,6 +1,4 @@
-package com.example.freebie.fragments;
-
-import static com.example.freebie.MainActivity.mainActivity;
+package com.t895.freebie.fragments;
 
 import android.os.Bundle;
 
@@ -8,14 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.freebie.R;
-import com.sothree.slidinguppanel.PanelState;
+import com.t895.freebie.R;
 
 public class SettingsFragment extends Fragment {
 

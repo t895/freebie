@@ -1,4 +1,4 @@
-package com.example.freebie;
+package com.t895.freebie;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;

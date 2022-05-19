@@ -1,4 +1,4 @@
-package com.example.freebie.adapter;
+package com.t895.freebie.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -19,8 +19,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.freebie.R;
-import com.example.freebie.models.Album;
+import com.t895.freebie.R;
+import com.t895.freebie.models.Album;
 
 import org.jetbrains.annotations.NotNull;
 

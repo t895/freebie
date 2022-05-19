@@ -1,8 +1,7 @@
-package com.example.freebie.adapter;
+package com.t895.freebie.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.view.LayoutInflater;
@@ -19,9 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.freebie.MediaPlayerService;
-import com.example.freebie.R;
-import com.example.freebie.models.Song;
+import com.t895.freebie.MediaPlayerService;
+import com.t895.freebie.models.Song;
+import com.t895.freebie.R;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -91,22 +90,20 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
             tvArtist.setText(song.getArtist());
             tvSongLength.setText(song.getLength());
 
-            btnSong.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    try {
-                        // Reset the song that the media player is referencing
-                        MediaPlayerService.mediaPlayer.reset();
+            btnSong.setOnClickListener(view ->
+            {
+                try {
+                    // Reset the song that the media player is referencing
+                    MediaPlayerService.mediaPlayer.reset();
 
-                        // Set the correct song path and start the player
-                        MediaPlayerService.mediaPlayer.setDataSource(song.getPath());
-                        MediaPlayerService.mediaPlayer.prepare();
-                        MediaPlayerService.mediaPlayer.start();
+                    // Set the correct song path and start the player
+                    MediaPlayerService.mediaPlayer.setDataSource(song.getPath());
+                    MediaPlayerService.mediaPlayer.prepare();
+                    MediaPlayerService.mediaPlayer.start();
 
-                        // Track the currently playing song globally
-                        MediaPlayerService.currentlyPlayingSong = song;
-                    } catch (Exception e) { e.printStackTrace(); }
-                }
+                    // Track the currently playing song globally
+                    MediaPlayerService.currentlyPlayingSong = song;
+                } catch (Exception e) { e.printStackTrace(); }
             });
 
             Glide.with(context)

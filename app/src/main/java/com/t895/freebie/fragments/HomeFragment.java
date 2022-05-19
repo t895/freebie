@@ -1,6 +1,6 @@
-package com.example.freebie.fragments;
+package com.t895.freebie.fragments;
 
-import static com.example.freebie.MainActivity.mainActivity;
+import static com.t895.freebie.MainActivity.mainActivity;
 
 import android.os.Bundle;
 
@@ -15,12 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
-import com.example.freebie.R;
-import com.example.freebie.SongRetrievalService;
-import com.example.freebie.adapter.SongsAdapter;
-import com.example.freebie.models.Song;
+import com.t895.freebie.R;
+import com.t895.freebie.SongRetrievalService;
+import com.t895.freebie.adapter.SongsAdapter;
+import com.t895.freebie.models.Song;
 
 import java.util.ArrayList;
 
