@@ -19,10 +19,10 @@
         <item name="colorOnTertiary">@color/m3_sys_color_dynamic_light_on_tertiary</item>
         <item name="colorTertiaryContainer">@color/m3_sys_color_dynamic_light_tertiary_container</item>
         <item name="colorOnTertiaryContainer">@color/m3_sys_color_dynamic_light_on_tertiary_container</item>
-        <item name="colorError">@color/freebie_dark_error</item>
-        <item name="colorErrorContainer">@color/freebie_dark_errorContainer</item>
-        <item name="colorOnError">@color/freebie_dark_onError</item>
-        <item name="colorOnErrorContainer">@color/freebie_dark_onErrorContainer</item>
+        <item name="colorError">@color/freebie_light_error</item>
+        <item name="colorErrorContainer">@color/freebie_light_errorContainer</item>
+        <item name="colorOnError">@color/freebie_light_onError</item>
+        <item name="colorOnErrorContainer">@color/freebie_light_onErrorContainer</item>
         <item name="android:colorBackground">@color/m3_sys_color_dynamic_light_background</item>
         <item name="colorOnBackground">@color/m3_sys_color_dynamic_light_on_background</item>
         <item name="colorSurface">@color/m3_sys_color_dynamic_light_surface</item>
