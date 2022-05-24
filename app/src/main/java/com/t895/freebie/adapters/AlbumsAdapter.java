@@ -39,7 +39,6 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder
     public ArrayList<Album> albums;
 
     private RequestOptions requestOptions;
-    private Drawable placeholderFigure;
 
     public AlbumsAdapter(Context context, ArrayList<Album> albums) {
         this.context = context;
@@ -47,9 +46,6 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder
 
         requestOptions = new RequestOptions();
         requestOptions.transform(new CenterCrop(), new RoundedCorners(RoundedCornerHelper.dpToPx(context, CORNER_RADIUS_DP)));
-
-        Resources res = context.getResources();
-        placeholderFigure = ResourcesCompat.getDrawable(res, android.R.drawable.ic_menu_gallery, null);
     }
 
     @NonNull
@@ -93,8 +89,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder
             Glide.with(context)
                     .load(album.getUri())
                     .apply(requestOptions)
-                    .placeholder(placeholderFigure)
-                    .error(placeholderFigure)
+                    .placeholder(R.drawable.ic_image_loading)
+                    .error(R.drawable.ic_image_loading)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(ivAlbum);
         }

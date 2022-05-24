@@ -36,7 +36,6 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
     public ArrayList<Artist> artists;
 
     private RequestOptions requestOptions;
-    private Drawable placeholderFigure;
 
     public ArtistsAdapter(Context context, ArrayList<Artist> artists) {
         this.context = context;
@@ -44,9 +43,6 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
 
         requestOptions = new RequestOptions();
         requestOptions.transform(new CenterCrop(), new CircleCrop());
-
-        Resources res = context.getResources();
-        placeholderFigure = ResourcesCompat.getDrawable(res, android.R.drawable.ic_menu_gallery, null);
     }
 
     @NonNull
@@ -91,8 +87,8 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
             Glide.with(context)
                     .load(artist.getProfilePicture())
                     .apply(requestOptions)
-                    .placeholder(placeholderFigure)
-                    .error(placeholderFigure)
+                    .placeholder(R.drawable.ic_image_loading)
+                    .error(R.drawable.ic_image_loading)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(ivArtist);
         }

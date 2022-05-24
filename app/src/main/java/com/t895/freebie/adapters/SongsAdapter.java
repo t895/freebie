@@ -39,7 +39,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     public ArrayList<Song> songs;
 
     private RequestOptions requestOptions;
-    private Drawable placeholderFigure;
     private MediaMetadataRetriever imageRetriever;
 
     public SongsAdapter(Context context, ArrayList<Song> songs) {
@@ -48,9 +47,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
         requestOptions = new RequestOptions();
         requestOptions.transform(new RoundedCorners(RoundedCornerHelper.dpToPx(context, CORNER_RADIUS_DP)));
-
-        Resources res = context.getResources();
-        placeholderFigure = ResourcesCompat.getDrawable(res, android.R.drawable.ic_menu_gallery, null);
 
         imageRetriever = new MediaMetadataRetriever();
     }
@@ -113,8 +109,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
             Glide.with(context)
                     .load(song.getUri())
                     .apply(requestOptions)
-                    .placeholder(placeholderFigure)
-                    .error(placeholderFigure)
+                    .placeholder(R.drawable.ic_image_loading)
+                    .error(R.drawable.ic_image_loading)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(ivAlbum);
         }
