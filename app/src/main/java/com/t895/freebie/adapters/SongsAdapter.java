@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.t895.freebie.MediaPlayerService;
 import com.t895.freebie.models.Song;
 import com.t895.freebie.R;
+import com.t895.freebie.utils.RoundedCornerHelper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +31,9 @@ import java.util.List;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> {
 
-    public static final String TAG = "SongsAdapter";
+    private static final String TAG = "SongsAdapter";
+
+    private static final int CORNER_RADIUS_DP = 8;
 
     private Context context;
     public ArrayList<Song> songs;
@@ -44,7 +47,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
         this.songs = songs;
 
         requestOptions = new RequestOptions();
-        requestOptions.transform(new RoundedCorners(32));
+        requestOptions.transform(new RoundedCorners(RoundedCornerHelper.dpToPx(context, CORNER_RADIUS_DP)));
 
         Resources res = context.getResources();
         placeholderFigure = ResourcesCompat.getDrawable(res, android.R.drawable.ic_menu_gallery, null);
@@ -97,8 +100,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     // Reset the song that the media player is referencing
                     MediaPlayerService.mediaPlayer.reset();
 
-                    // Set the correct song path and start the player
-                    MediaPlayerService.mediaPlayer.setDataSource(song.getUri());
+                    // Set the correct song path without uri identifier and start the player
+                    MediaPlayerService.mediaPlayer.setDataSource(song.getUri().substring(5));
                     MediaPlayerService.mediaPlayer.prepare();
                     MediaPlayerService.mediaPlayer.start();
 

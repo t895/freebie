@@ -22,6 +22,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.t895.freebie.R;
 import com.t895.freebie.models.Album;
+import com.t895.freebie.utils.RoundedCornerHelper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +31,9 @@ import java.util.List;
 
 public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
 
-    public static final String TAG = "AlbumsAdapter";
+    private static final String TAG = "AlbumsAdapter";
+
+    private static final int CORNER_RADIUS_DP = 8;
 
     private Context context;
     public ArrayList<Album> albums;
@@ -43,7 +46,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder
         this.albums = albums;
 
         requestOptions = new RequestOptions();
-        requestOptions.transform(new CenterCrop(), new RoundedCorners(32));
+        requestOptions.transform(new CenterCrop(), new RoundedCorners(RoundedCornerHelper.dpToPx(context, CORNER_RADIUS_DP)));
 
         Resources res = context.getResources();
         placeholderFigure = ResourcesCompat.getDrawable(res, android.R.drawable.ic_menu_gallery, null);
