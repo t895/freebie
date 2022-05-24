@@ -2,7 +2,7 @@
     <!-- Base light theme -->
     <style name="Theme.Freebie" parent="Theme.Material3.Light.NoActionBar">
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="m">@color/freebie_background</item>
+        <item name="android:statusBarColor">@color/freebie_background</item>
         <item name="android:windowLightStatusBar">true</item>
 
         <item name="colorPrimary">@color/freebie_primary</item>
