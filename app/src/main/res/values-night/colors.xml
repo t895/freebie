@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from https://material-foundation.github.io/material-theme-builder -->
+<resources>
+    <color name="freebie_primary">#D0BCFF</color>
+    <color name="freebie_onPrimary">#381E72</color>
+    <color name="freebie_primaryContainer">#4F378B</color>
+    <color name="freebie_onPrimaryContainer">#EADDFF</color>
+    <color name="freebie_secondary">#CCC2DC</color>
+    <color name="freebie_onSecondary">#332D41</color>
+    <color name="freebie_secondaryContainer">#4A4458</color>
+    <color name="freebie_onSecondaryContainer">#E8DEF8</color>
+    <color name="freebie_tertiary">#EFB8C8</color>
+    <color name="freebie_onTertiary">#492532</color>
+    <color name="freebie_tertiaryContainer">#633B48</color>
+    <color name="freebie_onTertiaryContainer">#FFD8E4</color>
+    <color name="freebie_error">#F2B8B5</color>
+    <color name="freebie_errorContainer">#8C1D18</color>
+    <color name="freebie_onError">#601410</color>
+    <color name="freebie_onErrorContainer">#F9DEDC</color>
+    <color name="freebie_background">#1C1B1F</color>
+    <color name="freebie_onBackground">#E6E1E5</color>
+    <color name="freebie_surface">#1C1B1F</color>
+    <color name="freebie_onSurface">#E6E1E5</color>
+    <color name="freebie_surfaceVariant">#49454F</color>
+    <color name="freebie_onSurfaceVariant">#CAC4D0</color>
+    <color name="freebie_outline">#938F99</color>
+    <color name="freebie_inverseOnSurface">#1C1B1F</color>
+    <color name="freebie_inverseSurface">#E6E1E5</color>
+    <color name="freebie_inversePrimary">#6750A4</color>
+    <color name="freebie_shadow">#000000</color>
+    <color name="freebie_primaryInverse">#6750A4</color>
+</resources>
