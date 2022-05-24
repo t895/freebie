@@ -15,7 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.t895.freebie.adapter.AlbumsAdapter;
+import com.t895.freebie.adapters.AlbumsAdapter;
 import com.t895.freebie.R;
 import com.t895.freebie.SongRetrievalService;
 import com.t895.freebie.models.Album;
@@ -61,36 +61,31 @@ public class AlbumsFragment extends Fragment {
     }
 
     public void refreshAlbums(Bundle savedInstanceState) {
-        Log.i(TAG, "Rebuilding list!");
         // Remember to CLEAR OUT old items before appending in the new ones
         adapter.clear();
 
-        Thread RefreshingHomeFragment = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Just load the current values if nothing from disk is being loaded
-                if(!SongRetrievalService.loadingSongs)
-                    mainActivity.runOnUiThread(() -> adapter.addAll(Album.albumArrayList));
+        Thread RefreshingAlbumsFragment = new Thread(() -> {
+            // Just load the current values if nothing from disk is being loaded
+            if(!SongRetrievalService.loadingSongs)
+                mainActivity.runOnUiThread(() -> adapter.addAll(Album.albumArrayList));
 
-                // Check for edge case during configuration change happens during disk load
-                if(savedInstanceState != null)
-                    return;
+            // Check for edge case during configuration change happens during disk load
+            if(savedInstanceState != null)
+                return;
 
-                while(SongRetrievalService.loadingSongs) {
-                    int startSize = adapter.albums.size();
-                    int endSize = Album.albumArrayList.size();
-                    if(startSize < endSize) {
-                        mainActivity.runOnUiThread(() -> {
-                            for (int i = adapter.albums.size(); i < Album.albumArrayList.size(); i++) {
-                                adapter.add(Album.albumArrayList.get(i));
-                                adapter.notifyItemInserted(i);
-                            }
-                        });
-                    }
+            while(SongRetrievalService.loadingSongs) {
+                int startSize = adapter.albums.size();
+                int endSize = Album.albumArrayList.size();
+                if(startSize < endSize) {
+                    mainActivity.runOnUiThread(() -> {
+                        for (int i = adapter.albums.size(); i < Album.albumArrayList.size(); i++) {
+                            adapter.add(Album.albumArrayList.get(i));
+                            adapter.notifyItemInserted(i);
+                        }
+                    });
                 }
-                Log.i(TAG, "Finished loading list with " + adapter.albums.size() + " songs!");
             }
         });
-        RefreshingHomeFragment.start();
+        RefreshingAlbumsFragment.start();
     }
 }

@@ -1,4 +1,4 @@
-package com.t895.freebie.adapter;
+package com.t895.freebie.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.t895.freebie.R;
 import com.t895.freebie.models.Artist;
@@ -81,13 +82,10 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
         public void bind(Artist artist) {
             tvArtistName.setText(artist.getName());
 
-            btnArtist.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    try {
-                        Log.i(TAG, "Artist " + artist.getName() + " was pressed!");
-                    } catch (Exception e) { e.printStackTrace(); }
-                }
+            btnArtist.setOnClickListener(view -> {
+                try {
+                    Log.i(TAG, "Artist " + artist.getName() + " was pressed!");
+                } catch (Exception e) { e.printStackTrace(); }
             });
 
             Glide.with(context)
@@ -95,6 +93,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
                     .apply(requestOptions)
                     .placeholder(placeholderFigure)
                     .error(placeholderFigure)
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(ivArtist);
         }
     }

@@ -58,7 +58,7 @@ public class MediaPlayerService {
                 btnPlay = mainActivity.findViewById(R.id.btnPlay);
 
                 Glide.with(context)
-                        .load(currentlyPlayingSong.getAlbum().getHighResAlbumArt())
+                        .load(currentlyPlayingSong.getUri())
                         .transform(new RoundedCorners(32))
                         .into(ivNowPlayingImage);
 

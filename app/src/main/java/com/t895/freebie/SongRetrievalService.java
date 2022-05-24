@@ -55,7 +55,6 @@ public class SongRetrievalService {
         if (previousListSize == Song.songArrayList.size() && Song.songArrayList.size() != 0)
             return;
 
-        Log.i(TAG, "Getting songs from disk!");
         loadingSongs = true;
 
         // Remove stale data
@@ -65,7 +64,6 @@ public class SongRetrievalService {
 
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Uri filePathUri;
-        String filePath = "Unknown";
         Cursor songCursor = context.getContentResolver().query(songUri, null, null, null, null);
 
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
@@ -79,10 +77,9 @@ public class SongRetrievalService {
             do {
                 // Retrieve song path
                 filePathUri = Uri.parse(songCursor.getString(songLengthIndex));
-                filePath = filePathUri.getPath();
 
                 // Set the working file
-                mediaMetadataRetriever.setDataSource(filePath);
+                mediaMetadataRetriever.setDataSource(filePathUri.getPath());
 
                 // Retrieve title, artist, and album
                 String titleString = songCursor.getString(songTitleIndex);
@@ -96,7 +93,7 @@ public class SongRetrievalService {
                 String minutes = String.valueOf(rawLength / 60000);
                 String length;
                 if (seconds.length() == 1)
-                    length = minutes + ":" + "0" + seconds;
+                    length = minutes + ":0" + seconds;
                 else
                     length = minutes + ":" + seconds;
 
@@ -114,69 +111,31 @@ public class SongRetrievalService {
                 }
 
                 // Find unique albums to add into album collection and decode relevant album art
-                Bitmap highResAlbumBitmap = null;
-                Bitmap lowResAlbumBitmap = null;
                 if (Album.albumArrayList.size() == 0) {
-                    highResAlbumBitmap = loadFullResAlbumArt(mediaMetadataRetriever, highResAlbumBitmap);
-                    lowResAlbumBitmap = loadLowResAlbumArt(mediaMetadataRetriever, lowResAlbumBitmap);
-                    Album albumItem = new Album(albumString, artistString, highResAlbumBitmap, lowResAlbumBitmap);
+                    Album albumItem = new Album(albumString, artistString, "song:" + filePathUri);
                     Album.albumArrayList.add(albumItem);
                 } else {
                     for (int i = 0; i < Album.albumArrayList.size(); i++) {
                         if (Album.albumArrayList.get(i).getTitle().equals(albumString))
                             break;
                         if(i == Album.albumArrayList.size() - 1) {
-                            highResAlbumBitmap = loadFullResAlbumArt(mediaMetadataRetriever, highResAlbumBitmap);
-                            lowResAlbumBitmap = loadLowResAlbumArt(mediaMetadataRetriever, lowResAlbumBitmap);
-                            Album albumItem = new Album(albumString, artistString, highResAlbumBitmap, lowResAlbumBitmap);
+                            Album albumItem = new Album(albumString, artistString, "song:" + filePathUri);
                             Album.albumArrayList.add(albumItem);
                         }
                     }
                 }
-
-                // Prevent decoding the same bitmap multiple times
-                Album songAlbum = null;
-                for(int i = 0; i < Album.albumArrayList.size(); i++) {
-                    if (Album.albumArrayList.get(i).getTitle().equals(albumString)) {
-                        songAlbum = Album.albumArrayList.get(i);
-                        break;
-                    }
-                }
-                Song song = new Song(titleString, artistString, songAlbum, length, filePath);
+                Song song = new Song(titleString, artistString, length, "song:" + filePathUri);
                 Song.songArrayList.add(song);
             } while (songCursor.moveToNext());
         }
-        Log.i(TAG, "Parsing for songs finished with " + Song.songArrayList.size() + " total songs!");
         songCursor.close();
         mediaMetadataRetriever.release();
         loadingSongs = false;
 
         sharedPreferences = context.getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
-
         myEdit.putInt(SIZE_KEY, Song.songArrayList.size());
-
         myEdit.apply();
-    }
-
-    private Bitmap loadLowResAlbumArt(MediaMetadataRetriever mediaMetadataRetriever, Bitmap bitmap) {
-        byte[] songAlbumArtData = mediaMetadataRetriever.getEmbeddedPicture();
-        if (songAlbumArtData != null) {
-            bitmap = BitmapFactory.decodeByteArray(songAlbumArtData,
-                    0, songAlbumArtData.length);
-            bitmap = Bitmap.createScaledBitmap(bitmap,
-                    100, 100, false);
-        }
-        return bitmap;
-    }
-
-    private Bitmap loadFullResAlbumArt(MediaMetadataRetriever mediaMetadataRetriever, Bitmap bitmap) {
-        byte[] songAlbumArtData = mediaMetadataRetriever.getEmbeddedPicture();
-        if (songAlbumArtData != null) {
-            bitmap = BitmapFactory.decodeByteArray(songAlbumArtData,
-                    0, songAlbumArtData.length);
-        }
-        return bitmap;
     }
 
     private void getArtistDetails(String artistString) {
@@ -216,10 +175,9 @@ public class SongRetrievalService {
             }
 
             @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+            public void onFailure(int statusCode, Headers headers, String response,
+                                  Throwable throwable) {
                 Log.d(TAG, "Failed!");
-                Log.d(TAG, "" + statusCode);
-                Log.d(TAG, response);
                 Log.d(TAG, throwable.getMessage());
             }
         });

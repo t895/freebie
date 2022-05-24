@@ -17,5 +17,6 @@ public class Artist {
     public String getName() { return name; }
 
     public String getProfilePicture() { return profilePicture; }
+
     public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
 }

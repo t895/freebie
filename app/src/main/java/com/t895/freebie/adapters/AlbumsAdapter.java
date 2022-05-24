@@ -1,4 +1,4 @@
-package com.t895.freebie.adapter;
+package com.t895.freebie.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.t895.freebie.R;
 import com.t895.freebie.models.Album;
@@ -84,18 +85,14 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder
             tvAlbumTitle.setText(album.getTitle());
             tvAlbumArtist.setText(album.getArtist());
 
-            btnAlbum.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.i(TAG, "Album " + album.getTitle() + " was clicked!");
-                }
-            });
+            btnAlbum.setOnClickListener(view -> Log.i(TAG, "Album " + album.getTitle() + " was clicked!"));
 
             Glide.with(context)
-                    .load(album.getHighResAlbumArt())
+                    .load(album.getUri())
                     .apply(requestOptions)
                     .placeholder(placeholderFigure)
                     .error(placeholderFigure)
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(ivAlbum);
         }
     }

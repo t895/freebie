@@ -8,25 +8,21 @@ public class Song {
 
     private String title;
     private String artist;
-    private Album album;
     private String length;
-    private String path;
+    private String uri;
 
-    public Song(String title, String artist, Album album, String length, String path){
+    public Song(String title, String artist, String length, String uri){
         this.title = title;
         this.artist = artist;
-        this.album = album;
         this.length = length;
-        this.path = path;
+        this.uri = uri;
     }
 
     public String getTitle() { return title; }
 
     public String getArtist() { return artist; }
 
-    public Album getAlbum() { return album; }
-
     public String getLength() { return length; }
 
-    public String getPath() { return path; }
+    public String getUri() { return uri; }
 }

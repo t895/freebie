@@ -1,4 +1,4 @@
-package com.t895.freebie.adapter;
+package com.t895.freebie.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.t895.freebie.MediaPlayerService;
 import com.t895.freebie.models.Song;
@@ -97,7 +98,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     MediaPlayerService.mediaPlayer.reset();
 
                     // Set the correct song path and start the player
-                    MediaPlayerService.mediaPlayer.setDataSource(song.getPath());
+                    MediaPlayerService.mediaPlayer.setDataSource(song.getUri());
                     MediaPlayerService.mediaPlayer.prepare();
                     MediaPlayerService.mediaPlayer.start();
 
@@ -107,10 +108,11 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
             });
 
             Glide.with(context)
-                    .load(song.getAlbum().getLowResAlbumArt())
+                    .load(song.getUri())
                     .apply(requestOptions)
                     .placeholder(placeholderFigure)
                     .error(placeholderFigure)
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(ivAlbum);
         }
     }

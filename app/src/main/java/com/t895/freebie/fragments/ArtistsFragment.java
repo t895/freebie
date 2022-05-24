@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.t895.freebie.R;
 import com.t895.freebie.SongRetrievalService;
-import com.t895.freebie.adapter.ArtistsAdapter;
+import com.t895.freebie.adapters.ArtistsAdapter;
 import com.t895.freebie.models.Artist;
 
 import java.util.ArrayList;
@@ -61,36 +61,31 @@ public class ArtistsFragment extends Fragment {
     }
 
     public void refreshArtists(Bundle savedInstanceState) {
-        Log.i(TAG, "Rebuilding list!");
         // Remember to CLEAR OUT old items before appending in the new ones
         adapter.clear();
 
-        Thread RefreshingHomeFragment = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Just load the current values if nothing from disk is being loaded
-                if(!SongRetrievalService.loadingSongs)
-                    mainActivity.runOnUiThread(() -> adapter.addAll(Artist.artistArrayList));
+        Thread RefreshingArtistsFragment = new Thread(() -> {
+            // Just load the current values if nothing from disk is being loaded
+            if(!SongRetrievalService.loadingSongs)
+                mainActivity.runOnUiThread(() -> adapter.addAll(Artist.artistArrayList));
 
-                // Check for edge case during configuration change happens during disk load
-                if(savedInstanceState != null)
-                    return;
+            // Check for edge case during configuration change happens during disk load
+            if(savedInstanceState != null)
+                return;
 
-                while(SongRetrievalService.loadingSongs) {
-                    int startSize = adapter.artists.size();
-                    int endSize = Artist.artistArrayList.size();
-                    if(startSize < endSize) {
-                        mainActivity.runOnUiThread(() -> {
-                            for (int i = adapter.artists.size(); i < Artist.artistArrayList.size(); i++) {
-                                adapter.add(Artist.artistArrayList.get(i));
-                                adapter.notifyDataSetChanged();
-                            }
-                        });
-                    }
+            while(SongRetrievalService.loadingSongs) {
+                int startSize = adapter.artists.size();
+                int endSize = Artist.artistArrayList.size();
+                if(startSize < endSize) {
+                    mainActivity.runOnUiThread(() -> {
+                        for (int i = adapter.artists.size(); i < Artist.artistArrayList.size(); i++) {
+                            adapter.add(Artist.artistArrayList.get(i));
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
                 }
-                Log.i(TAG, "Finished loading list with " + adapter.artists.size() + " artists!");
             }
         });
-        RefreshingHomeFragment.start();
+        RefreshingArtistsFragment.start();
     }
 }
