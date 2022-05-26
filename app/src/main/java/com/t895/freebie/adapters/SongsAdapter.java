@@ -1,9 +1,7 @@
 package com.t895.freebie.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.media.MediaMetadataRetriever;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -31,15 +28,14 @@ import java.util.List;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> {
 
-    private static final String TAG = "SongsAdapter";
+    private String TAG = "SongsAdapter";
 
-    private static final int CORNER_RADIUS_DP = 8;
+    private int CORNER_RADIUS_DP = 8;
 
     private Context context;
     public ArrayList<Song> songs;
 
-    private RequestOptions requestOptions;
-    private MediaMetadataRetriever imageRetriever;
+    private final RequestOptions requestOptions;
 
     public SongsAdapter(Context context, ArrayList<Song> songs) {
         this.context = context;
@@ -47,14 +43,13 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
         requestOptions = new RequestOptions();
         requestOptions.transform(new RoundedCorners(RoundedCornerHelper.dpToPx(context, CORNER_RADIUS_DP)));
-
-        imageRetriever = new MediaMetadataRetriever();
     }
 
     @NonNull
     @NotNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+        Log.i(TAG, "" + R.layout.item_song);
         View view = LayoutInflater.from(context).inflate(R.layout.item_song, parent, false);
         return new ViewHolder(view);
     }
@@ -68,7 +63,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     @Override
     public int getItemCount() { return songs.size(); }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvTitle;
         private ImageView ivAlbum;
@@ -111,7 +106,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     .apply(requestOptions)
                     .placeholder(R.drawable.ic_image_loading)
                     .error(R.drawable.ic_image_loading)
-                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .transition(DrawableTransitionOptions.withCrossFade(50))
                     .into(ivAlbum);
         }
     }

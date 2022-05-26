@@ -30,22 +30,16 @@ public class SongDataFetcher implements DataFetcher<ByteBuffer> {
     }
 
     @Override
-    public void cleanup() {
-        mediaMetadataRetriever.release();
-    }
+    public void cleanup() { mediaMetadataRetriever.release(); }
 
     @Override
     public void cancel() { /* No-op */ }
 
     @NonNull
     @Override
-    public Class<ByteBuffer> getDataClass() {
-        return ByteBuffer.class;
-    }
+    public Class<ByteBuffer> getDataClass() { return ByteBuffer.class; }
 
     @NonNull
     @Override
-    public DataSource getDataSource() {
-        return DataSource.LOCAL;
-    }
+    public DataSource getDataSource() { return DataSource.LOCAL; }
 }

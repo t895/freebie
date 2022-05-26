@@ -1,8 +1,6 @@
 package com.t895.freebie.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -45,7 +42,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder
         this.albums = albums;
 
         requestOptions = new RequestOptions();
-        requestOptions.transform(new CenterCrop(), new RoundedCorners(RoundedCornerHelper.dpToPx(context, CORNER_RADIUS_DP)));
+        requestOptions.transform(new CenterCrop(),
+                new RoundedCorners(RoundedCornerHelper.dpToPx(context, CORNER_RADIUS_DP)));
     }
 
     @NonNull
@@ -84,14 +82,16 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder
             tvAlbumTitle.setText(album.getTitle());
             tvAlbumArtist.setText(album.getArtist());
 
-            btnAlbum.setOnClickListener(view -> Log.i(TAG, "Album " + album.getTitle() + " was clicked!"));
+            btnAlbum.setOnClickListener(view -> {
+                Log.i(TAG, "Album " + album.getTitle() + " was clicked!");
+            });
 
             Glide.with(context)
                     .load(album.getUri())
                     .apply(requestOptions)
                     .placeholder(R.drawable.ic_image_loading)
                     .error(R.drawable.ic_image_loading)
-                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .transition(DrawableTransitionOptions.withCrossFade(50))
                     .into(ivAlbum);
         }
     }

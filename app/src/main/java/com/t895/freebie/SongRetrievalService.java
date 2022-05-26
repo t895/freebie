@@ -1,10 +1,10 @@
 package com.t895.freebie;
 
+import static com.t895.freebie.MainActivity.mainActivity;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -32,25 +32,14 @@ public class SongRetrievalService {
     public static final String SONGS_LOADED = "songs_loaded";
     public static final String SIZE_KEY = "size";
 
-    public static SongRetrievalService songRetrievalService;
-    private static Context context;
-
     public static boolean loadingSongs = false;
 
     private static SharedPreferences sharedPreferences;
 
-    public SongRetrievalService(Context context) { SongRetrievalService.context = context; }
-
-    public static SongRetrievalService getInstance(Context context) {
-        SongRetrievalService.context = context;
-        if(songRetrievalService == null)
-            songRetrievalService = new SongRetrievalService(context);
-        return songRetrievalService;
-    }
-
-    public void getSongs() {
+    public static void getAllSongs() {
         // Check if previously loaded songs are still in memory
-        sharedPreferences = context.getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
+        sharedPreferences = mainActivity.getApplicationContext()
+                .getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
         int previousListSize = sharedPreferences.getInt(SIZE_KEY, 0);
         if (previousListSize == Song.songArrayList.size() && Song.songArrayList.size() != 0)
             return;
@@ -64,7 +53,8 @@ public class SongRetrievalService {
 
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Uri filePathUri;
-        Cursor songCursor = context.getContentResolver().query(songUri, null, null, null, null);
+        Cursor songCursor = mainActivity.getApplicationContext().getContentResolver().query(songUri,
+                null, null, null, null);
 
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
 
@@ -124,7 +114,7 @@ public class SongRetrievalService {
                         }
                     }
                 }
-                Song song = new Song(titleString, artistString, length, "song:" + filePathUri);
+                Song song = new Song(titleString, artistString, albumString, length, "song:" + filePathUri);
                 Song.songArrayList.add(song);
             } while (songCursor.moveToNext());
         }
@@ -132,13 +122,14 @@ public class SongRetrievalService {
         mediaMetadataRetriever.release();
         loadingSongs = false;
 
-        sharedPreferences = context.getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
+        sharedPreferences = mainActivity.getApplicationContext()
+                .getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
         myEdit.putInt(SIZE_KEY, Song.songArrayList.size());
         myEdit.apply();
     }
 
-    private void getArtistDetails(String artistString) {
+    private static void getArtistDetails(String artistString) {
         // Put together elements of request URL
         String artistNameURL = artistString.replaceAll(" ", "%20");
         String requestURL = BASE_URL + "search?q=" + artistNameURL + "&per_page=1"

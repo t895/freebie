@@ -12,11 +12,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.t895.freebie.models.Song;
 import com.sothree.slidinguppanel.PanelState;
+import com.t895.freebie.utils.RoundedCornerHelper;
 
 public class MediaPlayerService {
 
-    public static MediaPlayerService mediaPlayerService;
-    private static Context context;
+    public static final String TAG = "MediaPlayerService";
+
+    private static final int CORNER_RADIUS_DP = 8;
 
     public static MediaPlayer mediaPlayer;
     public static Song currentlyPlayingSong;
@@ -25,55 +27,41 @@ public class MediaPlayerService {
     private TextView tvNowPlayingSong;
     private Button btnPlay;
 
-    public MediaPlayerService(Context context) {
-        MediaPlayerService.context = context;
-        mediaPlayer = new MediaPlayer();
+    public MediaPlayerService() {
+        if(mediaPlayer == null)
+            mediaPlayer = new MediaPlayer();
 
         // Set currently playing song to nothing when song completes
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                currentlyPlayingSong = null;
+        mediaPlayer.setOnCompletionListener(mp -> {
+            currentlyPlayingSong = null;
 
-                ivNowPlayingImage = mainActivity.findViewById(R.id.ivNowPlaying);
-                tvNowPlayingSong = mainActivity.findViewById(R.id.tvNowPlayingSong);
-                btnPlay = mainActivity.findViewById(R.id.btnPlay);
+            ivNowPlayingImage = mainActivity.findViewById(R.id.ivNowPlaying);
+            tvNowPlayingSong = mainActivity.findViewById(R.id.tvNowPlayingSong);
+            btnPlay = mainActivity.findViewById(R.id.btnPlay);
 
-                Glide.with(context)
-                        .load(R.drawable.ic_image_loading)
-                        .into(ivNowPlayingImage);
+            tvNowPlayingSong.setText(R.string.nothing_playing);
+            btnPlay.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_play, 0, 0, 0);
 
-                tvNowPlayingSong.setText(R.string.nothing_playing);
-                btnPlay.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_play, 0, 0, 0);
-
-                mainActivity.panelLayout.setPanelState(PanelState.HIDDEN);
-            }
+            mainActivity.panelLayout.setPanelState(PanelState.HIDDEN);
         });
 
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                ivNowPlayingImage = mainActivity.findViewById(R.id.ivNowPlaying);
-                tvNowPlayingSong = mainActivity.findViewById(R.id.tvNowPlayingSong);
-                btnPlay = mainActivity.findViewById(R.id.btnPlay);
+        mediaPlayer.setOnPreparedListener(mediaPlayer -> {
+            ivNowPlayingImage = mainActivity.findViewById(R.id.ivNowPlaying);
+            tvNowPlayingSong = mainActivity.findViewById(R.id.tvNowPlayingSong);
+            btnPlay = mainActivity.findViewById(R.id.btnPlay);
 
-                Glide.with(context)
-                        .load(currentlyPlayingSong.getUri())
-                        .transform(new RoundedCorners(32))
-                        .into(ivNowPlayingImage);
+            Glide.with(mainActivity.getApplicationContext())
+                    .load(currentlyPlayingSong.getUri())
+                    .transform(new RoundedCorners(RoundedCornerHelper
+                                    .dpToPx(mainActivity.getApplicationContext(),
+                                            CORNER_RADIUS_DP)))
+                    .into(ivNowPlayingImage);
 
-                tvNowPlayingSong.setText(currentlyPlayingSong.getTitle());
-                btnPlay.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_pause, 0, 0, 0);
+            tvNowPlayingSong.setText(currentlyPlayingSong.getTitle());
+            btnPlay.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_pause,
+                    0, 0, 0);
 
-                mainActivity.panelLayout.setPanelState(PanelState.COLLAPSED);
-            }
+            mainActivity.panelLayout.setPanelState(PanelState.COLLAPSED);
         });
-    }
-
-    public static MediaPlayerService getInstance(Context context) {
-        MediaPlayerService.context = context;
-        if(mediaPlayerService == null)
-            mediaPlayerService = new MediaPlayerService(context);
-        return mediaPlayerService;
     }
 }
