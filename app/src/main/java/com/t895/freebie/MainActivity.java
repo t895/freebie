@@ -2,13 +2,13 @@ package com.t895.freebie;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.t895.freebie.fragments.AlbumsFragment;
 import com.t895.freebie.fragments.ArtistsFragment;
@@ -17,7 +17,6 @@ import com.t895.freebie.fragments.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sothree.slidinguppanel.PanelState;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.t895.freebie.models.Song;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     public SlidingUpPanelLayout panelLayout;
     public Button btnPlay;
+    private ProgressBar progressBar;
 
     private static boolean gettingSongs = false;
 
@@ -44,18 +44,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mainActivity = this;
 
+        panelLayout = findViewById(R.id.sliding_layout);
+        btnPlay = findViewById(R.id.btnPlay);
+        progressBar = findViewById(R.id.progressBar);
+
         if(!gettingSongs) {
             Thread GettingSongsFromDisk = new Thread(() ->
             {
+                runOnUiThread(() -> progressBar.setVisibility(View.VISIBLE));
                 gettingSongs = true;
                 SongRetrievalService.getAllSongs();
                 gettingSongs = false;
+                runOnUiThread(() -> progressBar.setVisibility(View.INVISIBLE));
             });
             GettingSongsFromDisk.start();
         }
 
-        panelLayout = findViewById(R.id.sliding_layout);
-        btnPlay = findViewById(R.id.btnPlay);
+
 
         MediaPlayerService mediaPlayerService = new MediaPlayerService();
         if(MediaPlayerService.currentlyPlayingSong == null)
