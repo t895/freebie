@@ -12,12 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="80dp"
-        android:gravity="bottom"
-        tools:umanoDragView="@+id/dragView"
-        tools:umanoPanelHeight="60dp"
-        tools:umanoParallaxOffset="100dp"
-        tools:umanoScrollableView="@+id/listView"
-        tools:umanoShadowHeight="2dp">
+        android:gravity="bottom">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
