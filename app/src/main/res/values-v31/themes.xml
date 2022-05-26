@@ -5,6 +5,8 @@
         <item name="android:statusBarColor">@color/m3_sys_color_dynamic_light_background</item>
         <item name="android:windowLightStatusBar">true</item>
 
+        <item name="android:windowActionBarOverlay">true</item>
+
         <!-- Color palettes -->
         <item name="colorPrimary">@color/m3_sys_color_dynamic_light_primary</item>
         <item name="colorOnPrimary">@color/m3_sys_color_dynamic_light_on_primary</item>

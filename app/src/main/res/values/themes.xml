@@ -5,6 +5,8 @@
         <item name="android:statusBarColor">@color/freebie_background</item>
         <item name="android:windowLightStatusBar">true</item>
 
+        <item name="android:windowActionBarOverlay">true</item>
+
         <item name="colorPrimary">@color/freebie_primary</item>
         <item name="colorOnPrimary">@color/freebie_onPrimary</item>
         <item name="colorPrimaryInverse">@color/freebie_primaryInverse</item>

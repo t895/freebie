@@ -57,8 +57,12 @@ public class MainActivity extends AppCompatActivity {
         panelLayout = findViewById(R.id.sliding_layout);
         btnPlay = findViewById(R.id.btnPlay);
 
-        new MediaPlayerService();
-        panelLayout.setPanelState(PanelState.HIDDEN);
+        MediaPlayerService mediaPlayerService = new MediaPlayerService();
+        if(MediaPlayerService.currentlyPlayingSong == null)
+            panelLayout.setPanelState(PanelState.HIDDEN);
+        else
+            mediaPlayerService.setActiveSong();
+
         btnPlay.setOnClickListener(view ->
         {
             if(MediaPlayerService.mediaPlayer.isPlaying()) {

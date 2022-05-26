@@ -6,6 +6,8 @@
         <item name="android:statusBarColor">@color/m3_sys_color_dynamic_dark_background</item>
         <item name="android:windowLightStatusBar">false</item>
 
+        <item name="android:windowActionBarOverlay">true</item>
+
         <item name="colorPrimary">@color/m3_sys_color_dynamic_dark_primary</item>
         <item name="colorOnPrimary">@color/m3_sys_color_dynamic_dark_on_primary</item>
         <item name="colorPrimaryInverse">@color/m3_sys_color_dynamic_dark_inverse_primary</item>

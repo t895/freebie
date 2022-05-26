@@ -45,23 +45,25 @@ public class MediaPlayerService {
             mainActivity.panelLayout.setPanelState(PanelState.HIDDEN);
         });
 
-        mediaPlayer.setOnPreparedListener(mediaPlayer -> {
-            ivNowPlayingImage = mainActivity.findViewById(R.id.ivNowPlaying);
-            tvNowPlayingSong = mainActivity.findViewById(R.id.tvNowPlayingSong);
-            btnPlay = mainActivity.findViewById(R.id.btnPlay);
+        mediaPlayer.setOnPreparedListener(mediaPlayer -> setActiveSong());
+    }
 
-            Glide.with(mainActivity.getApplicationContext())
-                    .load(currentlyPlayingSong.getUri())
-                    .transform(new RoundedCorners(RoundedCornerHelper
-                                    .dpToPx(mainActivity.getApplicationContext(),
-                                            CORNER_RADIUS_DP)))
-                    .into(ivNowPlayingImage);
+    public void setActiveSong() {
+        ivNowPlayingImage = mainActivity.findViewById(R.id.ivNowPlaying);
+        tvNowPlayingSong = mainActivity.findViewById(R.id.tvNowPlayingSong);
+        btnPlay = mainActivity.findViewById(R.id.btnPlay);
 
-            tvNowPlayingSong.setText(currentlyPlayingSong.getTitle());
-            btnPlay.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_pause,
-                    0, 0, 0);
+        Glide.with(mainActivity.getApplicationContext())
+                .load(currentlyPlayingSong.getUri())
+                .transform(new RoundedCorners(RoundedCornerHelper
+                        .dpToPx(mainActivity.getApplicationContext(),
+                                CORNER_RADIUS_DP)))
+                .into(ivNowPlayingImage);
 
-            mainActivity.panelLayout.setPanelState(PanelState.COLLAPSED);
-        });
+        tvNowPlayingSong.setText(currentlyPlayingSong.getTitle());
+        btnPlay.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_pause,
+                0, 0, 0);
+
+        mainActivity.panelLayout.setPanelState(PanelState.COLLAPSED);
     }
 }
