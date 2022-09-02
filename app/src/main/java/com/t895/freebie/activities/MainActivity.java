@@ -1,4 +1,4 @@
-package com.t895.freebie;
+package com.t895.freebie.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
@@ -7,10 +7,11 @@ import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 
+import com.t895.freebie.MediaPlayerHelper;
+import com.t895.freebie.R;
+import com.t895.freebie.MediaInitialization;
 import com.t895.freebie.fragments.AlbumsFragment;
 import com.t895.freebie.fragments.ArtistsFragment;
 import com.t895.freebie.fragments.HomeFragment;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState)
   {
     SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
-    splashScreen.setKeepOnScreenCondition(() -> SongRetrievalService.loadingSongs);
+    splashScreen.setKeepOnScreenCondition(() -> MediaInitialization.loadingSongs);
 
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -50,28 +51,28 @@ public class MainActivity extends AppCompatActivity
     panelLayout = findViewById(R.id.sliding_layout);
     btnPlay = findViewById(R.id.btnPlay);
 
-    if (!SongRetrievalService.loadingSongs)
+    if (!MediaInitialization.loadingSongs)
     {
-      new Thread(() -> SongRetrievalService.getAllSongs(getApplicationContext())).start();
+      new Thread(() -> MediaInitialization.getAllSongs(getApplicationContext())).start();
     }
 
-    MediaPlayerService mediaPlayerService = new MediaPlayerService();
-    if (MediaPlayerService.currentlyPlayingSong == null)
+    MediaPlayerHelper mediaPlayerHelper = new MediaPlayerHelper();
+    if (MediaPlayerHelper.currentlyPlayingSong == null)
       panelLayout.setPanelState(PanelState.HIDDEN);
     else
-      mediaPlayerService.setActiveSong();
+      mediaPlayerHelper.setActiveSong();
 
     btnPlay.setOnClickListener(view ->
     {
-      if (MediaPlayerService.mediaPlayer.isPlaying())
+      if (MediaPlayerHelper.mediaPlayer.isPlaying())
       {
-        MediaPlayerService.mediaPlayer.pause();
+        MediaPlayerHelper.mediaPlayer.pause();
         btnPlay.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_play,
                 0, 0, 0);
       }
       else
       {
-        MediaPlayerService.mediaPlayer.start();
+        MediaPlayerHelper.mediaPlayer.start();
         btnPlay.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_pause,
                 0, 0, 0);
       }

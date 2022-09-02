@@ -1,8 +1,7 @@
 package com.t895.freebie;
 
-import static com.t895.freebie.MainActivity.mainActivity;
+import static com.t895.freebie.activities.MainActivity.mainActivity;
 
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,7 +13,7 @@ import com.t895.freebie.models.Song;
 import com.sothree.slidinguppanel.PanelState;
 import com.t895.freebie.utils.RoundedCornerHelper;
 
-public class MediaPlayerService
+public class MediaPlayerHelper
 {
 
   public static final String TAG = "MediaPlayerService";
@@ -28,7 +27,7 @@ public class MediaPlayerService
   private TextView tvNowPlayingSong;
   private Button btnPlay;
 
-  public MediaPlayerService()
+  public MediaPlayerHelper()
   {
     if (mediaPlayer == null)
       mediaPlayer = new MediaPlayer();

@@ -1,8 +1,7 @@
-package com.t895.freebie;
+package com.t895.freebie.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -13,6 +12,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.t895.freebie.R;
 
 public class SetupActivity extends AppCompatActivity
 {

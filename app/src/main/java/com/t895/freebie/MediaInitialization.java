@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Headers;
 
-public class SongRetrievalService
+public class MediaInitialization
 {
 
   public static final String TAG = "SongRetrievalService";

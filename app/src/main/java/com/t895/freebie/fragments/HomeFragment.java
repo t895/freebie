@@ -1,6 +1,6 @@
 package com.t895.freebie.fragments;
 
-import static com.t895.freebie.MainActivity.mainActivity;
+import static com.t895.freebie.activities.MainActivity.mainActivity;
 
 import android.os.Bundle;
 
@@ -10,13 +10,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.t895.freebie.R;
-import com.t895.freebie.SongRetrievalService;
+import com.t895.freebie.MediaInitialization;
 import com.t895.freebie.adapters.SongsAdapter;
 import com.t895.freebie.models.Song;
 
@@ -73,7 +72,7 @@ public class HomeFragment extends Fragment
     new Thread(() ->
     {
       // Just load the current values if nothing from disk is being loaded
-      if (!SongRetrievalService.loadingSongs)
+      if (!MediaInitialization.loadingSongs)
       {
         mainActivity.runOnUiThread(() -> adapter.addAll(Song.songArrayList));
       }
@@ -82,7 +81,7 @@ public class HomeFragment extends Fragment
       if (savedInstanceState != null)
         return;
 
-      while (SongRetrievalService.loadingSongs)
+      while (MediaInitialization.loadingSongs)
       {
         int startSize = adapter.songs.size();
         int endSize = Song.songArrayList.size();

@@ -17,7 +17,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.t895.freebie.MediaPlayerService;
+import com.t895.freebie.MediaPlayerHelper;
 import com.t895.freebie.models.Song;
 import com.t895.freebie.R;
 import com.t895.freebie.utils.RoundedCornerHelper;
@@ -102,15 +102,15 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
         try
         {
           // Reset the song that the media player is referencing
-          MediaPlayerService.mediaPlayer.reset();
+          MediaPlayerHelper.mediaPlayer.reset();
 
           // Set the correct song path without uri identifier and start the player
-          MediaPlayerService.mediaPlayer.setDataSource(song.getUri().substring(5));
-          MediaPlayerService.mediaPlayer.prepare();
-          MediaPlayerService.mediaPlayer.start();
+          MediaPlayerHelper.mediaPlayer.setDataSource(song.getUri().substring(5));
+          MediaPlayerHelper.mediaPlayer.prepare();
+          MediaPlayerHelper.mediaPlayer.start();
 
           // Track the currently playing song globally
-          MediaPlayerService.currentlyPlayingSong = song;
+          MediaPlayerHelper.currentlyPlayingSong = song;
         }
         catch (Exception e)
         {
