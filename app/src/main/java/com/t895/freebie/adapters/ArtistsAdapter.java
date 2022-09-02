@@ -28,7 +28,6 @@ import java.util.List;
 
 public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHolder>
 {
-
   public static final String TAG = "ArtistsAdapter";
 
   private Context context;
@@ -41,8 +40,8 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
     this.context = context;
     this.artists = artists;
 
-    requestOptions = new RequestOptions();
-    requestOptions.transform(new CenterCrop(), new CircleCrop());
+    requestOptions = new RequestOptions()
+            .transform(new CenterCrop(), new CircleCrop());
   }
 
   @NonNull

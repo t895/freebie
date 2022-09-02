@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Artist
 {
-
   public static ArrayList<Artist> artistArrayList = new ArrayList<>();
 
   private String name;

@@ -15,10 +15,7 @@ import com.t895.freebie.R;
 
 public class SettingsFragment extends Fragment
 {
-
   private static final String TAG = "SettingsFragment";
-
-  private Button btnToggle;
 
   public SettingsFragment()
   {

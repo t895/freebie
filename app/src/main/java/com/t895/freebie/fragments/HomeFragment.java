@@ -1,7 +1,5 @@
 package com.t895.freebie.fragments;
 
-import static com.t895.freebie.activities.MainActivity.mainActivity;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,7 +21,6 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment
 {
-
   public static final String TAG = "HomeFragment";
 
   private SongsAdapter adapter;
@@ -74,7 +71,7 @@ public class HomeFragment extends Fragment
       // Just load the current values if nothing from disk is being loaded
       if (!MediaInitialization.loadingSongs)
       {
-        mainActivity.runOnUiThread(() -> adapter.addAll(Song.songArrayList));
+        getActivity().runOnUiThread(() -> adapter.addAll(Song.songArrayList));
       }
 
       // Check for edge case during configuration change happens during disk load
@@ -87,7 +84,7 @@ public class HomeFragment extends Fragment
         int endSize = Song.songArrayList.size();
         if (startSize < endSize)
         {
-          mainActivity.runOnUiThread(() ->
+          getActivity().runOnUiThread(() ->
           {
             for (int i = adapter.songs.size(); i < Song.songArrayList.size(); i++)
             {

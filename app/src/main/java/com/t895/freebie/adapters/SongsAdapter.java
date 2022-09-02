@@ -29,10 +29,7 @@ import java.util.List;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 {
-
   private String TAG = "SongsAdapter";
-
-  private int CORNER_RADIUS_DP = 8;
 
   private Context context;
   public ArrayList<Song> songs;
@@ -44,9 +41,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
     this.context = context;
     this.songs = songs;
 
-    requestOptions = new RequestOptions();
-    requestOptions.transform(
-            new RoundedCorners(RoundedCornerHelper.dpToPx(context, CORNER_RADIUS_DP)));
+    requestOptions = new RequestOptions().transform(
+            new RoundedCorners(RoundedCornerHelper.dpToPx(context, RoundedCornerHelper.EIGHT_DP)));
   }
 
   @NonNull
@@ -54,7 +50,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
   @Override
   public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType)
   {
-    Log.i(TAG, "" + R.layout.item_song);
     View view = LayoutInflater.from(context).inflate(R.layout.item_song, parent, false);
     return new ViewHolder(view);
   }

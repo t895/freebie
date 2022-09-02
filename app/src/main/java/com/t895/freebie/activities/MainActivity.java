@@ -8,10 +8,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.t895.freebie.MediaPlayerHelper;
 import com.t895.freebie.R;
 import com.t895.freebie.MediaInitialization;
+import com.t895.freebie.UIManager;
 import com.t895.freebie.fragments.AlbumsFragment;
 import com.t895.freebie.fragments.ArtistsFragment;
 import com.t895.freebie.fragments.HomeFragment;
@@ -19,24 +24,24 @@ import com.t895.freebie.fragments.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sothree.slidinguppanel.PanelState;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.t895.freebie.utils.RoundedCornerHelper;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements UIManager
 {
-
   public static final String TAG = "MainActivity";
 
   public static final String ITEM_SELECTED = "item_selected";
   public static final String ITEM_KEY = "item";
 
-  public static MainActivity mainActivity;
+  private HomeFragment homeFragment;
+  private AlbumsFragment albumsFragment;
+  private ArtistsFragment artistsFragment;
+  private SettingsFragment settingsFragment;
 
-  public HomeFragment homeFragment;
-  public AlbumsFragment albumsFragment;
-  public ArtistsFragment artistsFragment;
-  public SettingsFragment settingsFragment;
-
-  public SlidingUpPanelLayout panelLayout;
-  public Button btnPlay;
+  private SlidingUpPanelLayout panelLayout;
+  private Button btnPlay;
+  private ImageView ivNowPlayingImage;
+  private TextView tvNowPlayingSong;
 
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -46,21 +51,22 @@ public class MainActivity extends AppCompatActivity
 
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    mainActivity = this;
 
     panelLayout = findViewById(R.id.sliding_layout);
     btnPlay = findViewById(R.id.btnPlay);
+    ivNowPlayingImage = findViewById(R.id.ivNowPlaying);
+    tvNowPlayingSong = findViewById(R.id.tvNowPlayingSong);
 
     if (!MediaInitialization.loadingSongs)
     {
       new Thread(() -> MediaInitialization.getAllSongs(getApplicationContext())).start();
     }
 
-    MediaPlayerHelper mediaPlayerHelper = new MediaPlayerHelper();
+    new MediaPlayerHelper(this);
     if (MediaPlayerHelper.currentlyPlayingSong == null)
       panelLayout.setPanelState(PanelState.HIDDEN);
     else
-      mediaPlayerHelper.setActiveSong();
+      setActiveSong();
 
     btnPlay.setOnClickListener(view ->
     {
@@ -137,5 +143,30 @@ public class MainActivity extends AppCompatActivity
       bottomNavigationView.setSelectedItemId(previouslySelectedItem);
     else
       bottomNavigationView.setSelectedItemId(R.id.action_home);
+  }
+
+
+  @Override
+  public void songFinished()
+  {
+    MediaPlayerHelper.setCurrentlyPlayingSong(null);
+    tvNowPlayingSong.setText(R.string.nothing_playing);
+    btnPlay.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_play, 0, 0, 0);
+    panelLayout.setPanelState(PanelState.HIDDEN);
+  }
+
+  @Override
+  public void setActiveSong()
+  {
+    Glide.with(getApplicationContext())
+            .load(MediaPlayerHelper.getCurrentlyPlayingSong().getUri())
+            .transform(new RoundedCorners(RoundedCornerHelper.dpToPx(getApplicationContext(),
+                    RoundedCornerHelper.EIGHT_DP)))
+            .into(ivNowPlayingImage);
+
+    tvNowPlayingSong.setText(MediaPlayerHelper.getCurrentlyPlayingSong().getTitle());
+    btnPlay.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_pause, 0, 0, 0);
+
+    panelLayout.setPanelState(PanelState.COLLAPSED);
   }
 }

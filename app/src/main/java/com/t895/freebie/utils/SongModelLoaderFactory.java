@@ -12,7 +12,7 @@ public class SongModelLoaderFactory implements ModelLoaderFactory<String, ByteBu
 {
   @NonNull
   @Override
-  public ModelLoader<String, ByteBuffer> build(MultiModelLoaderFactory multiFactory)
+  public ModelLoader<String, ByteBuffer> build(@NonNull MultiModelLoaderFactory multiFactory)
   {
     return new SongFileModelLoader();
   }

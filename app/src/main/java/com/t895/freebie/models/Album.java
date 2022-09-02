@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class Album implements Parcelable
 {
-
   public static ArrayList<Album> albumArrayList = new ArrayList<>();
 
   private String title;

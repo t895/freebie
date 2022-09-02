@@ -1,6 +1,6 @@
 package com.t895.freebie.utils;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.model.ModelLoader;
@@ -12,9 +12,10 @@ public final class SongFileModelLoader implements ModelLoader<String, ByteBuffer
 {
   private static final String DATA_URI_PREFIX = "song:";
 
-  @Nullable
+  @NonNull
   @Override
-  public LoadData<ByteBuffer> buildLoadData(String model, int width, int height, Options options)
+  public LoadData<ByteBuffer> buildLoadData(@NonNull String model, int width, int height, @NonNull
+          Options options)
   {
     return new LoadData<>(new ObjectKey(model), new SongDataFetcher(model));
   }

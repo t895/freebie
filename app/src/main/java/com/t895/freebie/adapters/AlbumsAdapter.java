@@ -29,10 +29,7 @@ import java.util.List;
 
 public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder>
 {
-
   private static final String TAG = "AlbumsAdapter";
-
-  private static final int CORNER_RADIUS_DP = 8;
 
   private Context context;
   public ArrayList<Album> albums;
@@ -44,9 +41,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder
     this.context = context;
     this.albums = albums;
 
-    requestOptions = new RequestOptions();
-    requestOptions.transform(new CenterCrop(),
-            new RoundedCorners(RoundedCornerHelper.dpToPx(context, CORNER_RADIUS_DP)));
+    requestOptions = new RequestOptions().transform(new CenterCrop(),
+            new RoundedCorners(RoundedCornerHelper.dpToPx(context, RoundedCornerHelper.EIGHT_DP)));
   }
 
   @NonNull

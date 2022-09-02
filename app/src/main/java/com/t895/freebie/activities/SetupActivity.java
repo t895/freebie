@@ -17,7 +17,6 @@ import com.t895.freebie.R;
 
 public class SetupActivity extends AppCompatActivity
 {
-
   public static final String TAG = "SetupActivity";
 
   private Button btnPermission;

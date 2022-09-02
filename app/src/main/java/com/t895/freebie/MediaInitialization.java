@@ -25,7 +25,6 @@ import okhttp3.Headers;
 
 public class MediaInitialization
 {
-
   public static final String TAG = "SongRetrievalService";
 
   public static final String BASE_URL = "https://api.discogs.com/database/";

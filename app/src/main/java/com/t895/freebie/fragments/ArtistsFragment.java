@@ -1,7 +1,5 @@
 package com.t895.freebie.fragments;
 
-import static com.t895.freebie.activities.MainActivity.mainActivity;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,7 +21,6 @@ import java.util.ArrayList;
 
 public class ArtistsFragment extends Fragment
 {
-
   private static final String TAG = "ArtistsFragment";
 
   private RecyclerView rvArtists;
@@ -76,7 +73,7 @@ public class ArtistsFragment extends Fragment
     {
       // Just load the current values if nothing from disk is being loaded
       if (!MediaInitialization.loadingSongs)
-        mainActivity.runOnUiThread(() -> adapter.addAll(Artist.artistArrayList));
+        getActivity().runOnUiThread(() -> adapter.addAll(Artist.artistArrayList));
 
       // Check for edge case during configuration change happens during disk load
       if (savedInstanceState != null)
@@ -88,7 +85,7 @@ public class ArtistsFragment extends Fragment
         int endSize = Artist.artistArrayList.size();
         if (startSize < endSize)
         {
-          mainActivity.runOnUiThread(() ->
+          getActivity().runOnUiThread(() ->
           {
             for (int i = adapter.artists.size(); i < Artist.artistArrayList.size(); i++)
             {

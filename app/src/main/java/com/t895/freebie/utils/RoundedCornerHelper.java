@@ -5,6 +5,8 @@ import android.util.DisplayMetrics;
 
 public class RoundedCornerHelper
 {
+  public static final int EIGHT_DP = 8;
+
   public static int dpToPx(Context context, int dp)
   {
     DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
