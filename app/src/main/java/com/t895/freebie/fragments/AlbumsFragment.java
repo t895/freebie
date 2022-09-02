@@ -22,70 +22,84 @@ import com.t895.freebie.models.Album;
 
 import java.util.ArrayList;
 
-public class AlbumsFragment extends Fragment {
+public class AlbumsFragment extends Fragment
+{
 
-    private static final String TAG = "AlbumsFragment";
+  private static final String TAG = "AlbumsFragment";
 
-    private RecyclerView rvAlbums;
-    private ArrayList<Album> allAlbums;
-    private AlbumsAdapter adapter;
+  private RecyclerView rvAlbums;
+  private ArrayList<Album> allAlbums;
+  private AlbumsAdapter adapter;
 
-    public AlbumsFragment() {
-        // Required empty public constructor
-    }
+  public AlbumsFragment()
+  {
+    // Required empty public constructor
+  }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
+  @Override
+  public void onCreate(Bundle savedInstanceState)
+  {
+    super.onCreate(savedInstanceState);
+  }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_albums, container, false);
-    }
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+          Bundle savedInstanceState)
+  {
+    // Inflate the layout for this fragment
+    return inflater.inflate(R.layout.fragment_albums, container, false);
+  }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+  @Override
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
+  {
+    super.onViewCreated(view, savedInstanceState);
 
-        rvAlbums = view.findViewById(R.id.rvAlbums);
+    rvAlbums = view.findViewById(R.id.rvAlbums);
 
-        allAlbums = new ArrayList<>();
-        adapter = new AlbumsAdapter(getContext(), allAlbums);
-        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+    allAlbums = new ArrayList<>();
+    adapter = new AlbumsAdapter(getContext(), allAlbums);
+    adapter.setStateRestorationPolicy(
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
 
-        rvAlbums.setAdapter(adapter);
-        rvAlbums.setLayoutManager(new GridLayoutManager(getContext(), 2));
+    rvAlbums.setAdapter(adapter);
+    rvAlbums.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        refreshAlbums(savedInstanceState);
-    }
+    refreshAlbums(savedInstanceState);
+  }
 
-    public void refreshAlbums(Bundle savedInstanceState) {
-        // Remember to CLEAR OUT old items before appending in the new ones
-        adapter.clear();
+  public void refreshAlbums(Bundle savedInstanceState)
+  {
+    // Remember to CLEAR OUT old items before appending in the new ones
+    adapter.clear();
 
-        Thread RefreshingAlbumsFragment = new Thread(() -> {
-            // Just load the current values if nothing from disk is being loaded
-            if(!SongRetrievalService.loadingSongs)
-                mainActivity.runOnUiThread(() -> adapter.addAll(Album.albumArrayList));
+    Thread RefreshingAlbumsFragment = new Thread(() ->
+    {
+      // Just load the current values if nothing from disk is being loaded
+      if (!SongRetrievalService.loadingSongs)
+        mainActivity.runOnUiThread(() -> adapter.addAll(Album.albumArrayList));
 
-            // Check for edge case during configuration change happens during disk load
-            if(savedInstanceState != null)
-                return;
+      // Check for edge case during configuration change happens during disk load
+      if (savedInstanceState != null)
+        return;
 
-            while(SongRetrievalService.loadingSongs) {
-                int startSize = adapter.albums.size();
-                int endSize = Album.albumArrayList.size();
-                if(startSize < endSize) {
-                    mainActivity.runOnUiThread(() -> {
-                        for (int i = adapter.albums.size(); i < Album.albumArrayList.size(); i++) {
-                            adapter.add(Album.albumArrayList.get(i));
-                            adapter.notifyItemInserted(i);
-                        }
-                    });
-                }
+      while (SongRetrievalService.loadingSongs)
+      {
+        int startSize = adapter.albums.size();
+        int endSize = Album.albumArrayList.size();
+        if (startSize < endSize)
+        {
+          mainActivity.runOnUiThread(() ->
+          {
+            for (int i = adapter.albums.size(); i < Album.albumArrayList.size(); i++)
+            {
+              adapter.add(Album.albumArrayList.get(i));
+              adapter.notifyItemInserted(i);
             }
-        });
-        RefreshingAlbumsFragment.start();
-    }
+          });
+        }
+      }
+    });
+    RefreshingAlbumsFragment.start();
+  }
 }

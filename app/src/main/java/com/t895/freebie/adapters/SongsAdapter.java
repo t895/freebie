@@ -26,102 +26,123 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> {
+public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
+{
 
-    private String TAG = "SongsAdapter";
+  private String TAG = "SongsAdapter";
 
-    private int CORNER_RADIUS_DP = 8;
+  private int CORNER_RADIUS_DP = 8;
 
-    private Context context;
-    public ArrayList<Song> songs;
+  private Context context;
+  public ArrayList<Song> songs;
 
-    private final RequestOptions requestOptions;
+  private final RequestOptions requestOptions;
 
-    public SongsAdapter(Context context, ArrayList<Song> songs) {
-        this.context = context;
-        this.songs = songs;
+  public SongsAdapter(Context context, ArrayList<Song> songs)
+  {
+    this.context = context;
+    this.songs = songs;
 
-        requestOptions = new RequestOptions();
-        requestOptions.transform(new RoundedCorners(RoundedCornerHelper.dpToPx(context, CORNER_RADIUS_DP)));
+    requestOptions = new RequestOptions();
+    requestOptions.transform(
+            new RoundedCorners(RoundedCornerHelper.dpToPx(context, CORNER_RADIUS_DP)));
+  }
+
+  @NonNull
+  @NotNull
+  @Override
+  public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType)
+  {
+    Log.i(TAG, "" + R.layout.item_song);
+    View view = LayoutInflater.from(context).inflate(R.layout.item_song, parent, false);
+    return new ViewHolder(view);
+  }
+
+  @Override
+  public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position)
+  {
+    Song song = songs.get(position);
+    holder.bind(song);
+  }
+
+  @Override
+  public int getItemCount()
+  {
+    return songs.size();
+  }
+
+  public class ViewHolder extends RecyclerView.ViewHolder
+  {
+
+    private TextView tvTitle;
+    private ImageView ivAlbum;
+    private TextView tvArtist;
+    private TextView tvSongLength;
+    private RelativeLayout btnSong;
+
+    public ViewHolder(@NonNull @NotNull View itemView)
+    {
+      super(itemView);
+      tvTitle = itemView.findViewById(R.id.tvSongTitle);
+      ivAlbum = itemView.findViewById(R.id.ivAlbum);
+      tvArtist = itemView.findViewById(R.id.tvArtist);
+      tvSongLength = itemView.findViewById(R.id.tvSongLength);
+      btnSong = itemView.findViewById(R.id.btnSong);
     }
 
-    @NonNull
-    @NotNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        Log.i(TAG, "" + R.layout.item_song);
-        View view = LayoutInflater.from(context).inflate(R.layout.item_song, parent, false);
-        return new ViewHolder(view);
-    }
+    public void bind(Song song)
+    {
+      tvTitle.setText(song.getTitle());
+      tvArtist.setText(song.getArtist());
+      tvSongLength.setText(song.getLength());
 
-    @Override
-    public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-        Song song = songs.get(position);
-        holder.bind(song);
-    }
+      btnSong.setOnClickListener(view ->
+      {
+        try
+        {
+          // Reset the song that the media player is referencing
+          MediaPlayerService.mediaPlayer.reset();
 
-    @Override
-    public int getItemCount() { return songs.size(); }
+          // Set the correct song path without uri identifier and start the player
+          MediaPlayerService.mediaPlayer.setDataSource(song.getUri().substring(5));
+          MediaPlayerService.mediaPlayer.prepare();
+          MediaPlayerService.mediaPlayer.start();
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView tvTitle;
-        private ImageView ivAlbum;
-        private TextView tvArtist;
-        private TextView tvSongLength;
-        private RelativeLayout btnSong;
-
-        public ViewHolder(@NonNull @NotNull View itemView) {
-            super(itemView);
-            tvTitle = itemView.findViewById(R.id.tvSongTitle);
-            ivAlbum = itemView.findViewById(R.id.ivAlbum);
-            tvArtist = itemView.findViewById(R.id.tvArtist);
-            tvSongLength = itemView.findViewById(R.id.tvSongLength);
-            btnSong = itemView.findViewById(R.id.btnSong);
+          // Track the currently playing song globally
+          MediaPlayerService.currentlyPlayingSong = song;
         }
-
-        public void bind(Song song) {
-            tvTitle.setText(song.getTitle());
-            tvArtist.setText(song.getArtist());
-            tvSongLength.setText(song.getLength());
-
-            btnSong.setOnClickListener(view ->
-            {
-                try {
-                    // Reset the song that the media player is referencing
-                    MediaPlayerService.mediaPlayer.reset();
-
-                    // Set the correct song path without uri identifier and start the player
-                    MediaPlayerService.mediaPlayer.setDataSource(song.getUri().substring(5));
-                    MediaPlayerService.mediaPlayer.prepare();
-                    MediaPlayerService.mediaPlayer.start();
-
-                    // Track the currently playing song globally
-                    MediaPlayerService.currentlyPlayingSong = song;
-                } catch (Exception e) { e.printStackTrace(); }
-            });
-
-            Glide.with(context)
-                    .load(song.getUri())
-                    .apply(requestOptions)
-                    .placeholder(R.drawable.ic_image_loading)
-                    .error(R.drawable.ic_image_loading)
-                    .transition(DrawableTransitionOptions.withCrossFade(50))
-                    .into(ivAlbum);
+        catch (Exception e)
+        {
+          e.printStackTrace();
         }
-    }
+      });
 
-    // Clean all elements of the recycler
-    public void clear() {
-        this.songs.clear();
-        notifyDataSetChanged();
+      Glide.with(context)
+              .load(song.getUri())
+              .apply(requestOptions)
+              .placeholder(R.drawable.ic_image_loading)
+              .error(R.drawable.ic_image_loading)
+              .transition(DrawableTransitionOptions.withCrossFade(50))
+              .into(ivAlbum);
     }
+  }
 
-    // Add a list of items -- change to type used
-    public void addAll(List<Song> songs) {
-        this.songs.addAll(songs);
-        notifyDataSetChanged();
-    }
+  // Clean all elements of the recycler
+  public void clear()
+  {
+    this.songs.clear();
+    notifyDataSetChanged();
+  }
 
-    public void add(Song song) { this.songs.add(song); }
+  // Add a list of items -- change to type used
+  public void addAll(List<Song> songs)
+  {
+    this.songs.addAll(songs);
+    notifyDataSetChanged();
+  }
+
+  public void add(Song song)
+  {
+    this.songs.add(song);
+  }
 }

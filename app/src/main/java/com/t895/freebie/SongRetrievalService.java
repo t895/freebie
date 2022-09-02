@@ -20,157 +20,189 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 import okhttp3.Headers;
 
-public class SongRetrievalService {
+public class SongRetrievalService
+{
 
-    public static final String TAG = "SongRetrievalService";
+  public static final String TAG = "SongRetrievalService";
 
-    public static final String BASE_URL = "https://api.discogs.com/database/";
-    public static final String API_KEY = "DHqvPIxOJwmIMQHtHkkoewRydAnSCRwFXnNAOUCI";
+  public static final String BASE_URL = "https://api.discogs.com/database/";
+  public static final String API_KEY = "DHqvPIxOJwmIMQHtHkkoewRydAnSCRwFXnNAOUCI";
 
-    public static final String SONGS_LOADED = "songs_loaded";
-    public static final String SIZE_KEY = "size";
+  public static final String SONGS_LOADED = "songs_loaded";
+  public static final String SIZE_KEY = "size";
 
-    public static boolean loadingSongs = false;
+  public static boolean loadingSongs = false;
 
-    private static SharedPreferences sharedPreferences;
+  private static SharedPreferences sharedPreferences;
 
-    public static void getAllSongs() {
-        // Check if previously loaded songs are still in memory
-        sharedPreferences = mainActivity.getApplicationContext()
-                .getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
-        int previousListSize = sharedPreferences.getInt(SIZE_KEY, 0);
-        if (previousListSize == Song.songArrayList.size() && Song.songArrayList.size() != 0)
-            return;
+  public static void getAllSongs()
+  {
+    // Check if previously loaded songs are still in memory
+    sharedPreferences = mainActivity.getApplicationContext()
+            .getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
+    int previousListSize = sharedPreferences.getInt(SIZE_KEY, 0);
+    if (previousListSize == Song.songArrayList.size() && Song.songArrayList.size() != 0)
+      return;
 
-        loadingSongs = true;
+    loadingSongs = true;
 
-        // Remove stale data
-        Song.songArrayList.clear();
-        Album.albumArrayList.clear();
-        Artist.artistArrayList.clear();
+    // Remove stale data
+    Song.songArrayList.clear();
+    Album.albumArrayList.clear();
+    Artist.artistArrayList.clear();
 
-        Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Uri filePathUri;
-        Cursor songCursor = mainActivity.getApplicationContext().getContentResolver().query(songUri,
-                null, null, null, null);
+    Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+    Uri filePathUri;
+    Cursor songCursor = mainActivity.getApplicationContext().getContentResolver().query(songUri,
+            null, null, null, null);
 
-        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+    MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
 
-        if (songCursor != null && songCursor.moveToFirst()) {
-            int songTitleIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-            int songArtistIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-            int songAlbumIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
-            int songLengthIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
+    if (songCursor != null && songCursor.moveToFirst())
+    {
+      int songTitleIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+      int songArtistIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+      int songAlbumIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
+      int songLengthIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
 
-            do {
-                // Retrieve song path
-                filePathUri = Uri.parse(songCursor.getString(songLengthIndex));
+      do
+      {
+        // Retrieve song path
+        filePathUri = Uri.parse(songCursor.getString(songLengthIndex));
 
-                // Set the working file
-                mediaMetadataRetriever.setDataSource(filePathUri.getPath());
+        // Set the working file
+        mediaMetadataRetriever.setDataSource(filePathUri.getPath());
 
-                // Retrieve title, artist, and album
-                String titleString = songCursor.getString(songTitleIndex);
-                String artistString = songCursor.getString(songArtistIndex);
-                String albumString = songCursor.getString(songAlbumIndex);
+        // Retrieve title, artist, and album
+        String titleString = songCursor.getString(songTitleIndex);
+        String artistString = songCursor.getString(songArtistIndex);
+        String albumString = songCursor.getString(songAlbumIndex);
 
-                // Retrieve song length
-                String duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                long rawLength = Long.parseLong(duration);
-                String seconds = String.valueOf((rawLength % 60000) / 1000);
-                String minutes = String.valueOf(rawLength / 60000);
-                String length;
-                if (seconds.length() == 1)
-                    length = minutes + ":0" + seconds;
-                else
-                    length = minutes + ":" + seconds;
+        // Retrieve song length
+        String duration = mediaMetadataRetriever.extractMetadata(
+                MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long rawLength = Long.parseLong(duration);
+        String seconds = String.valueOf((rawLength % 60000) / 1000);
+        String minutes = String.valueOf(rawLength / 60000);
+        String length;
+        if (seconds.length() == 1)
+          length = minutes + ":0" + seconds;
+        else
+          length = minutes + ":" + seconds;
 
-                // Find unique artists to add into artist collection
-                if (Artist.artistArrayList.size() == 0) {
-                    getArtistDetails(artistString);
-                } else {
-                    for (int i = 0; i < Artist.artistArrayList.size(); i++) {
-                        if (Artist.artistArrayList.get(i).getName().equals(artistString))
-                            break;
-                        if(i == Artist.artistArrayList.size() - 1) {
-                            getArtistDetails(artistString);
-                        }
-                    }
-                }
-
-                // Find unique albums to add into album collection and decode relevant album art
-                if (Album.albumArrayList.size() == 0) {
-                    Album albumItem = new Album(albumString, artistString, "song:" + filePathUri);
-                    Album.albumArrayList.add(albumItem);
-                } else {
-                    for (int i = 0; i < Album.albumArrayList.size(); i++) {
-                        if (Album.albumArrayList.get(i).getTitle().equals(albumString))
-                            break;
-                        if(i == Album.albumArrayList.size() - 1) {
-                            Album albumItem = new Album(albumString, artistString, "song:" + filePathUri);
-                            Album.albumArrayList.add(albumItem);
-                        }
-                    }
-                }
-                Song song = new Song(titleString, artistString, albumString, length, "song:" + filePathUri);
-                Song.songArrayList.add(song);
-            } while (songCursor.moveToNext());
+        // Find unique artists to add into artist collection
+        if (Artist.artistArrayList.size() == 0)
+        {
+          getArtistDetails(artistString);
         }
-        songCursor.close();
-        mediaMetadataRetriever.release();
-        loadingSongs = false;
-
-        sharedPreferences = mainActivity.getApplicationContext()
-                .getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
-        SharedPreferences.Editor myEdit = sharedPreferences.edit();
-        myEdit.putInt(SIZE_KEY, Song.songArrayList.size());
-        myEdit.apply();
-    }
-
-    private static void getArtistDetails(String artistString) {
-        // Put together elements of request URL
-        String artistNameURL = artistString.replaceAll(" ", "%20");
-        String requestURL = BASE_URL + "search?q=" + artistNameURL + "&per_page=1"
-                + "&token=" + API_KEY;
-
-        Artist artistItem = new Artist(artistString, null);
-        Artist.artistArrayList.add(artistItem);
-
-        int currentSongIndex = 0;
-        if(Artist.artistArrayList.size() > 1)
-            currentSongIndex = Artist.artistArrayList.size() - 1;
-
-        AsyncHttpClient client = new AsyncHttpClient();
-        int finalCurrentSongIndex = currentSongIndex;
-        client.get(requestURL, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.d(TAG, "onSuccess");
-                String artistPicture = null;
-                JSONObject jsonObject = json.jsonObject;
-                try {
-                    JSONArray results = jsonObject.getJSONArray("results");
-                    JSONObject artistData = results.getJSONObject(0);
-                    artistPicture = artistData.getString("cover_image");
-                    if (artistPicture.contains(".gif"))
-                        artistPicture = null;
-                } catch (JSONException e) {
-                    Log.e(TAG, "Hit json exception", e);
-                    e.printStackTrace();
-                    Artist.artistArrayList.get(finalCurrentSongIndex).setProfilePicture(null);
-                    return;
-                }
-                Artist.artistArrayList.get(finalCurrentSongIndex).setProfilePicture(artistPicture);
+        else
+        {
+          for (int i = 0; i < Artist.artistArrayList.size(); i++)
+          {
+            if (Artist.artistArrayList.get(i).getName().equals(artistString))
+              break;
+            if (i == Artist.artistArrayList.size() - 1)
+            {
+              getArtistDetails(artistString);
             }
+          }
+        }
 
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response,
-                                  Throwable throwable) {
-                Log.d(TAG, "Failed!");
-                Log.d(TAG, throwable.getMessage());
+        // Find unique albums to add into album collection and decode relevant album art
+        if (Album.albumArrayList.size() == 0)
+        {
+          Album albumItem = new Album(albumString, artistString, "song:" + filePathUri);
+          Album.albumArrayList.add(albumItem);
+        }
+        else
+        {
+          for (int i = 0; i < Album.albumArrayList.size(); i++)
+          {
+            if (Album.albumArrayList.get(i).getTitle().equals(albumString))
+              break;
+            if (i == Album.albumArrayList.size() - 1)
+            {
+              Album albumItem = new Album(albumString, artistString, "song:" + filePathUri);
+              Album.albumArrayList.add(albumItem);
             }
-        });
+          }
+        }
+        Song song = new Song(titleString, artistString, albumString, length, "song:" + filePathUri);
+        Song.songArrayList.add(song);
+      }
+      while (songCursor.moveToNext());
     }
+    songCursor.close();
+    try
+    {
+      mediaMetadataRetriever.release();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    loadingSongs = false;
+
+    sharedPreferences = mainActivity.getApplicationContext()
+            .getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
+    SharedPreferences.Editor myEdit = sharedPreferences.edit();
+    myEdit.putInt(SIZE_KEY, Song.songArrayList.size());
+    myEdit.apply();
+  }
+
+  private static void getArtistDetails(String artistString)
+  {
+    // Put together elements of request URL
+    String artistNameURL = artistString.replaceAll(" ", "%20");
+    String requestURL = BASE_URL + "search?q=" + artistNameURL + "&per_page=1"
+            + "&token=" + API_KEY;
+
+    Artist artistItem = new Artist(artistString, null);
+    Artist.artistArrayList.add(artistItem);
+
+    int currentSongIndex = 0;
+    if (Artist.artistArrayList.size() > 1)
+      currentSongIndex = Artist.artistArrayList.size() - 1;
+
+    AsyncHttpClient client = new AsyncHttpClient();
+    int finalCurrentSongIndex = currentSongIndex;
+    client.get(requestURL, new JsonHttpResponseHandler()
+    {
+      @Override
+      public void onSuccess(int statusCode, Headers headers, JSON json)
+      {
+        Log.d(TAG, "onSuccess");
+        String artistPicture = null;
+        JSONObject jsonObject = json.jsonObject;
+        try
+        {
+          JSONArray results = jsonObject.getJSONArray("results");
+          JSONObject artistData = results.getJSONObject(0);
+          artistPicture = artistData.getString("cover_image");
+          if (artistPicture.contains(".gif"))
+            artistPicture = null;
+        }
+        catch (JSONException e)
+        {
+          Log.e(TAG, "Hit json exception", e);
+          e.printStackTrace();
+          Artist.artistArrayList.get(finalCurrentSongIndex).setProfilePicture(null);
+          return;
+        }
+        Artist.artistArrayList.get(finalCurrentSongIndex).setProfilePicture(artistPicture);
+      }
+
+      @Override
+      public void onFailure(int statusCode, Headers headers, String response,
+              Throwable throwable)
+      {
+        Log.d(TAG, "Failed!");
+        Log.d(TAG, throwable.getMessage());
+      }
+    });
+  }
 }

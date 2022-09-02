@@ -25,82 +25,104 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHolder> {
+public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHolder>
+{
 
-    public static final String TAG = "ArtistsAdapter";
+  public static final String TAG = "ArtistsAdapter";
 
-    private Context context;
-    public ArrayList<Artist> artists;
+  private Context context;
+  public ArrayList<Artist> artists;
 
-    private RequestOptions requestOptions;
+  private RequestOptions requestOptions;
 
-    public ArtistsAdapter(Context context, ArrayList<Artist> artists) {
-        this.context = context;
-        this.artists = artists;
+  public ArtistsAdapter(Context context, ArrayList<Artist> artists)
+  {
+    this.context = context;
+    this.artists = artists;
 
-        requestOptions = new RequestOptions();
-        requestOptions.transform(new CenterCrop(), new CircleCrop());
+    requestOptions = new RequestOptions();
+    requestOptions.transform(new CenterCrop(), new CircleCrop());
+  }
+
+  @NonNull
+  @NotNull
+  @Override
+  public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType)
+  {
+    View view = LayoutInflater.from(context).inflate(R.layout.item_artist, parent, false);
+    return new ViewHolder(view);
+  }
+
+  @Override
+  public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position)
+  {
+    Artist artist = artists.get(position);
+    holder.bind(artist);
+  }
+
+  @Override
+  public int getItemCount()
+  {
+    return artists.size();
+  }
+
+  class ViewHolder extends RecyclerView.ViewHolder
+  {
+
+    private ImageView ivArtist;
+    private TextView tvArtistName;
+    private LinearLayout btnArtist;
+
+    public ViewHolder(@NonNull @NotNull View itemView)
+    {
+      super(itemView);
+      ivArtist = itemView.findViewById(R.id.ivArtist);
+      tvArtistName = itemView.findViewById(R.id.tvArtistName);
+      btnArtist = itemView.findViewById(R.id.btnArtist);
     }
 
-    @NonNull
-    @NotNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_artist, parent, false);
-        return new ViewHolder(view);
-    }
+    public void bind(Artist artist)
+    {
+      tvArtistName.setText(artist.getName());
 
-    @Override
-    public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-        Artist artist = artists.get(position);
-        holder.bind(artist);
-    }
-
-    @Override
-    public int getItemCount() { return artists.size(); }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-
-        private ImageView ivArtist;
-        private TextView tvArtistName;
-        private LinearLayout btnArtist;
-
-        public ViewHolder(@NonNull @NotNull View itemView) {
-            super(itemView);
-            ivArtist = itemView.findViewById(R.id.ivArtist);
-            tvArtistName = itemView.findViewById(R.id.tvArtistName);
-            btnArtist = itemView.findViewById(R.id.btnArtist);
+      btnArtist.setOnClickListener(view ->
+      {
+        try
+        {
+          Log.i(TAG, "Artist " + artist.getName() + " was pressed!");
         }
-
-        public void bind(Artist artist) {
-            tvArtistName.setText(artist.getName());
-
-            btnArtist.setOnClickListener(view -> {
-                try {
-                    Log.i(TAG, "Artist " + artist.getName() + " was pressed!");
-                } catch (Exception e) { e.printStackTrace(); }
-            });
-
-            Glide.with(context)
-                    .load(artist.getProfilePicture())
-                    .apply(requestOptions)
-                    .placeholder(R.drawable.ic_image_loading)
-                    .error(R.drawable.ic_image_loading)
-                    .transition(DrawableTransitionOptions.withCrossFade(50))
-                    .into(ivArtist);
+        catch (Exception e)
+        {
+          e.printStackTrace();
         }
-    }
-    // Clean all elements of the recycler
-    public void clear() {
-        this.artists.clear();
-        notifyDataSetChanged();
-    }
+      });
 
-    // Add a list of items -- change to type used
-    public void addAll(List<Artist> artists) {
-        this.artists.addAll(artists);
-        notifyDataSetChanged();
+      Glide.with(context)
+              .load(artist.getProfilePicture())
+              .apply(requestOptions)
+              .placeholder(R.drawable.ic_image_loading)
+              .error(R.drawable.ic_image_loading)
+              .transition(DrawableTransitionOptions.withCrossFade(50))
+              .into(ivArtist);
     }
+  }
 
-    public void add(Artist artist) { this.artists.add(artist); }
+  // Clean all elements of the recycler
+  public void clear()
+  {
+    this.artists.clear();
+    notifyDataSetChanged();
+  }
+
+  // Add a list of items -- change to type used
+  public void addAll(List<Artist> artists)
+  {
+    this.artists.addAll(artists);
+    notifyDataSetChanged();
+  }
+
+  public void add(Artist artist)
+  {
+    this.artists.add(artist);
+  }
 }

@@ -13,28 +13,35 @@ import android.widget.Button;
 
 import com.t895.freebie.R;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment
+{
 
-    private static final String TAG = "SettingsFragment";
+  private static final String TAG = "SettingsFragment";
 
-    private Button btnToggle;
+  private Button btnToggle;
 
-    public SettingsFragment() {
-        // Required empty public constructor
-    }
+  public SettingsFragment()
+  {
+    // Required empty public constructor
+  }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
+  @Override
+  public void onCreate(Bundle savedInstanceState)
+  {
+    super.onCreate(savedInstanceState);
+  }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
-    }
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+          Bundle savedInstanceState)
+  {
+    // Inflate the layout for this fragment
+    return inflater.inflate(R.layout.fragment_settings, container, false);
+  }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
+  @Override
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
+  {
+    super.onViewCreated(view, savedInstanceState);
+  }
 }

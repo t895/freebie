@@ -10,9 +10,11 @@ import com.bumptech.glide.module.AppGlideModule;
 import java.nio.ByteBuffer;
 
 @GlideModule
-public class GlideSongModule extends AppGlideModule {
-    @Override
-    public void registerComponents(Context context, Glide glide, Registry registry) {
-        registry.replace(String.class, ByteBuffer.class, new SongModelLoaderFactory());
-    }
+public class GlideSongModule extends AppGlideModule
+{
+  @Override
+  public void registerComponents(Context context, Glide glide, Registry registry)
+  {
+    registry.replace(String.class, ByteBuffer.class, new SongModelLoaderFactory());
+  }
 }
