@@ -73,7 +73,7 @@ public class ArtistsFragment extends Fragment
     // Remember to CLEAR OUT old items before appending in the new ones
     adapter.clear();
 
-    Thread RefreshingArtistsFragment = new Thread(() ->
+    new Thread(() ->
     {
       // Just load the current values if nothing from disk is being loaded
       if (!SongRetrievalService.loadingSongs)
@@ -94,12 +94,11 @@ public class ArtistsFragment extends Fragment
             for (int i = adapter.artists.size(); i < Artist.artistArrayList.size(); i++)
             {
               adapter.add(Artist.artistArrayList.get(i));
-              adapter.notifyDataSetChanged();
+              adapter.notifyItemInserted(i);
             }
           });
         }
       }
-    });
-    RefreshingArtistsFragment.start();
+    }).start();
   }
 }

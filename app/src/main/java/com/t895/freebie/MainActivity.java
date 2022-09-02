@@ -1,6 +1,7 @@
 package com.t895.freebie;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
@@ -35,34 +36,24 @@ public class MainActivity extends AppCompatActivity
 
   public SlidingUpPanelLayout panelLayout;
   public Button btnPlay;
-  private ProgressBar progressBar;
-
-  private static boolean gettingSongs = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
+    SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+    splashScreen.setKeepOnScreenCondition(() -> SongRetrievalService.loadingSongs);
+
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     mainActivity = this;
 
     panelLayout = findViewById(R.id.sliding_layout);
     btnPlay = findViewById(R.id.btnPlay);
-    progressBar = findViewById(R.id.progressBar);
 
-    if (!gettingSongs)
+    if (!SongRetrievalService.loadingSongs)
     {
-      Thread GettingSongsFromDisk = new Thread(() ->
-      {
-        runOnUiThread(() -> progressBar.setVisibility(View.VISIBLE));
-        gettingSongs = true;
-        SongRetrievalService.getAllSongs();
-        gettingSongs = false;
-        runOnUiThread(() -> progressBar.setVisibility(View.INVISIBLE));
-      });
-      GettingSongsFromDisk.start();
+      new Thread(() -> SongRetrievalService.getAllSongs(getApplicationContext())).start();
     }
-
 
     MediaPlayerService mediaPlayerService = new MediaPlayerService();
     if (MediaPlayerService.currentlyPlayingSong == null)

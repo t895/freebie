@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -99,6 +100,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
 
       Glide.with(context)
               .load(artist.getProfilePicture())
+              .diskCacheStrategy(DiskCacheStrategy.NONE)
               .apply(requestOptions)
               .placeholder(R.drawable.ic_image_loading)
               .error(R.drawable.ic_image_loading)

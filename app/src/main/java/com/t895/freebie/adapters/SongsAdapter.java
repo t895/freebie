@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
@@ -119,6 +120,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 
       Glide.with(context)
               .load(song.getUri())
+              .diskCacheStrategy(DiskCacheStrategy.NONE)
               .apply(requestOptions)
               .placeholder(R.drawable.ic_image_loading)
               .error(R.drawable.ic_image_loading)

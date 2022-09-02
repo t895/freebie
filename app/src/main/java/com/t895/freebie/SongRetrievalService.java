@@ -1,7 +1,5 @@
 package com.t895.freebie;
 
-import static com.t895.freebie.MainActivity.mainActivity;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -21,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Headers;
 
@@ -37,13 +36,11 @@ public class SongRetrievalService
 
   public static boolean loadingSongs = false;
 
-  private static SharedPreferences sharedPreferences;
-
-  public static void getAllSongs()
+  public static void getAllSongs(Context context)
   {
     // Check if previously loaded songs are still in memory
-    sharedPreferences = mainActivity.getApplicationContext()
-            .getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
+    SharedPreferences sharedPreferences =
+            context.getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
     int previousListSize = sharedPreferences.getInt(SIZE_KEY, 0);
     if (previousListSize == Song.songArrayList.size() && Song.songArrayList.size() != 0)
       return;
@@ -55,88 +52,102 @@ public class SongRetrievalService
     Album.albumArrayList.clear();
     Artist.artistArrayList.clear();
 
-    Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-    Uri filePathUri;
-    Cursor songCursor = mainActivity.getApplicationContext().getContentResolver().query(songUri,
-            null, null, null, null);
+    Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+    String[] projection = new String[]
+            {
+                    MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.ALBUM,
+                    MediaStore.Audio.Media.DATA,
+                    MediaStore.Audio.Media.DURATION
+            };
+    String selection = MediaStore.Video.Media.DURATION + " >= ?";
+    String[] selectionArgs = new String[]
+            {
+
+            };
 
     MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-
-    if (songCursor != null && songCursor.moveToFirst())
+    try (Cursor songCursor = context.getContentResolver().query(
+            uri,
+            projection,
+            null,
+            null,
+            null))
     {
-      int songTitleIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-      int songArtistIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-      int songAlbumIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
-      int songLengthIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
-
-      do
+      if (songCursor.moveToFirst())
       {
-        // Retrieve song path
-        filePathUri = Uri.parse(songCursor.getString(songLengthIndex));
+        int songTitleColumn = songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE);
+        int songArtistColumn = songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST);
+        int songAlbumColumn = songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM);
+        int songPathColumn = songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        int songDurationColumn = songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
 
-        // Set the working file
-        mediaMetadataRetriever.setDataSource(filePathUri.getPath());
-
-        // Retrieve title, artist, and album
-        String titleString = songCursor.getString(songTitleIndex);
-        String artistString = songCursor.getString(songArtistIndex);
-        String albumString = songCursor.getString(songAlbumIndex);
-
-        // Retrieve song length
-        String duration = mediaMetadataRetriever.extractMetadata(
-                MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long rawLength = Long.parseLong(duration);
-        String seconds = String.valueOf((rawLength % 60000) / 1000);
-        String minutes = String.valueOf(rawLength / 60000);
-        String length;
-        if (seconds.length() == 1)
-          length = minutes + ":0" + seconds;
-        else
-          length = minutes + ":" + seconds;
-
-        // Find unique artists to add into artist collection
-        if (Artist.artistArrayList.size() == 0)
+        Uri filePathUri;
+        do
         {
-          getArtistDetails(artistString);
-        }
-        else
-        {
-          for (int i = 0; i < Artist.artistArrayList.size(); i++)
+          // Retrieve song path
+          filePathUri = Uri.parse(songCursor.getString(songPathColumn));
+
+          // Retrieve title, artist, and album
+          String titleString = songCursor.getString(songTitleColumn);
+          String artistString = songCursor.getString(songArtistColumn);
+          String albumString = songCursor.getString(songAlbumColumn);
+          String durationString = songCursor.getString(songDurationColumn);
+
+          // Retrieve song length
+          long rawLength = Long.parseLong(durationString);
+          String seconds = String.valueOf((rawLength % 60000) / 1000);
+          String minutes = String.valueOf(rawLength / 60000);
+          String length;
+          if (seconds.length() == 1)
+            length = minutes + ":0" + seconds;
+          else
+            length = minutes + ":" + seconds;
+
+          // Find unique artists to add into artist collection
+          if (Artist.artistArrayList.size() == 0)
           {
-            if (Artist.artistArrayList.get(i).getName().equals(artistString))
-              break;
-            if (i == Artist.artistArrayList.size() - 1)
+            getArtistDetails(artistString);
+          }
+          else
+          {
+            for (int i = 0; i < Artist.artistArrayList.size(); i++)
             {
-              getArtistDetails(artistString);
+              if (Artist.artistArrayList.get(i).getName().equals(artistString))
+                break;
+              if (i == Artist.artistArrayList.size() - 1)
+              {
+                getArtistDetails(artistString);
+              }
             }
           }
-        }
 
-        // Find unique albums to add into album collection and decode relevant album art
-        if (Album.albumArrayList.size() == 0)
-        {
-          Album albumItem = new Album(albumString, artistString, "song:" + filePathUri);
-          Album.albumArrayList.add(albumItem);
-        }
-        else
-        {
-          for (int i = 0; i < Album.albumArrayList.size(); i++)
+          // Find unique albums to add into album collection and decode relevant album art
+          if (Album.albumArrayList.size() == 0)
           {
-            if (Album.albumArrayList.get(i).getTitle().equals(albumString))
-              break;
-            if (i == Album.albumArrayList.size() - 1)
+            Album albumItem = new Album(albumString, artistString, "song:" + filePathUri);
+            Album.albumArrayList.add(albumItem);
+          }
+          else
+          {
+            for (int i = 0; i < Album.albumArrayList.size(); i++)
             {
-              Album albumItem = new Album(albumString, artistString, "song:" + filePathUri);
-              Album.albumArrayList.add(albumItem);
+              if (Album.albumArrayList.get(i).getTitle().equals(albumString))
+                break;
+              if (i == Album.albumArrayList.size() - 1)
+              {
+                Album albumItem = new Album(albumString, artistString, "song:" + filePathUri);
+                Album.albumArrayList.add(albumItem);
+              }
             }
           }
+          Song song = new Song(titleString, artistString, albumString, length, "song:" + filePathUri);
+          Song.songArrayList.add(song);
         }
-        Song song = new Song(titleString, artistString, albumString, length, "song:" + filePathUri);
-        Song.songArrayList.add(song);
+        while (songCursor.moveToNext());
       }
-      while (songCursor.moveToNext());
     }
-    songCursor.close();
     try
     {
       mediaMetadataRetriever.release();
@@ -147,8 +158,7 @@ public class SongRetrievalService
     }
     loadingSongs = false;
 
-    sharedPreferences = mainActivity.getApplicationContext()
-            .getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
+    sharedPreferences = context.getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE);
     SharedPreferences.Editor myEdit = sharedPreferences.edit();
     myEdit.putInt(SIZE_KEY, Song.songArrayList.size());
     myEdit.apply();

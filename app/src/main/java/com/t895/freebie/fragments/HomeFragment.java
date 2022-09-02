@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +27,6 @@ public class HomeFragment extends Fragment
 
   public static final String TAG = "HomeFragment";
 
-  private RecyclerView rvSongs;
-  private ArrayList<Song> allSongs;
   private SongsAdapter adapter;
 
   public HomeFragment()
@@ -54,13 +53,12 @@ public class HomeFragment extends Fragment
   {
     super.onViewCreated(view, savedInstanceState);
 
-    rvSongs = view.findViewById(R.id.rvSongs);
-
-    allSongs = new ArrayList<>();
+    ArrayList<Song> allSongs = new ArrayList<>();
     adapter = new SongsAdapter(getContext(), allSongs);
     adapter.setStateRestorationPolicy(
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
 
+    RecyclerView rvSongs = view.findViewById(R.id.rvSongs);
     rvSongs.setAdapter(adapter);
     rvSongs.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -72,7 +70,7 @@ public class HomeFragment extends Fragment
     // Remember to CLEAR OUT old items before appending in the new ones
     adapter.clear();
 
-    Thread RefreshingHomeFragment = new Thread(() ->
+    new Thread(() ->
     {
       // Just load the current values if nothing from disk is being loaded
       if (!SongRetrievalService.loadingSongs)
@@ -100,7 +98,6 @@ public class HomeFragment extends Fragment
           });
         }
       }
-    });
-    RefreshingHomeFragment.start();
+    }).start();
   }
 }

@@ -73,7 +73,7 @@ public class AlbumsFragment extends Fragment
     // Remember to CLEAR OUT old items before appending in the new ones
     adapter.clear();
 
-    Thread RefreshingAlbumsFragment = new Thread(() ->
+    new Thread(() ->
     {
       // Just load the current values if nothing from disk is being loaded
       if (!SongRetrievalService.loadingSongs)
@@ -99,7 +99,6 @@ public class AlbumsFragment extends Fragment
           });
         }
       }
-    });
-    RefreshingAlbumsFragment.start();
+    }).start();
   }
 }

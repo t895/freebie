@@ -1,4 +1,10 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
+    <style name="Theme.Freebie.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/freebie_surface</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.Freebie</item>
+    </style>
+
     <!-- Base light theme -->
     <style name="Theme.Freebie" parent="Theme.Material3.Light.NoActionBar">
         <!-- Status bar color. -->
