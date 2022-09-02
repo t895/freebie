@@ -2,7 +2,9 @@ package com.t895.freebie;
 
 public interface UIManager
 {
-  public void songFinished();
+  // Collapse now playing panel and remove irrelevant information
+  void songFinished();
 
-  public void setActiveSong();
+  // Start now playing panel collapsed with new song information
+  void setActiveSong();
 }

@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements UIManager
       bottomNavigationView.setSelectedItemId(R.id.action_home);
   }
 
-
+  // UI Manager
   @Override
   public void songFinished()
   {
