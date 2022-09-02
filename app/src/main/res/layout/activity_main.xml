@@ -29,7 +29,6 @@
                     style="@style/Widget.Material3.ActionBar.Solid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?android:attr/colorBackground"
                     app:layout_scrollFlags="scroll|enterAlways|snap">
 
                     <TextView
