@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -7,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.t895.freebie"
-        minSdkVersion 23
+        minSdkVersion 27
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
@@ -17,38 +18,52 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            shrinkResources true
         }
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
     buildFeatures {
         viewBinding true
     }
+
     namespace 'com.t895.freebie'
 }
 
 dependencies {
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.media:media:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation 'androidx.activity:activity:1.5.1'
-    implementation 'androidx.fragment:fragment:1.5.2'
+    implementation 'androidx.activity:activity-ktx:1.6.0'
+    implementation 'androidx.fragment:fragment-ktx:1.5.3'
     implementation 'androidx.core:core-splashscreen:1.0.0'
+    implementation "androidx.preference:preference-ktx:1.2.0"
 
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.media3:media3-exoplayer:1.0.0-beta02'
+    implementation 'androidx.media3:media3-exoplayer-dash:1.0.0-beta02'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.0.0-beta02'
+    implementation 'androidx.media3:media3-ui:1.0.0-beta02'
+    implementation 'androidx.media3:media3-session:1.0.0-beta02'
+
+    implementation 'com.google.android.material:material:1.7.0-rc01'
 
     implementation 'org.jetbrains:annotations:23.0.0'
 
-    implementation 'com.github.bumptech.glide:glide:4.13.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.14.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.0'
 
     implementation 'com.codepath.libraries:asynchttpclient:2.2.0'
-
-    implementation 'com.github.hannesa2:AndroidSlidingUpPanel:4.4.1'
 }

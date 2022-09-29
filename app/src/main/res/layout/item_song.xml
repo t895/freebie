@@ -21,7 +21,7 @@
         android:id="@+id/tvArtist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvSongTitle"
+        android:layout_below="@+id/tvTitle"
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/ivAlbum"
         android:autoLink="all"
@@ -32,7 +32,7 @@
         tools:text="Artist Name" />
 
     <TextView
-        android:id="@+id/tvSongTitle"
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/ivAlbum"
