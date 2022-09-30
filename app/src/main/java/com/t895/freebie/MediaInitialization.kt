@@ -34,6 +34,8 @@ object MediaInitialization
 
     fun init(context: Context)
     {
+        Log.e(TAG, "This should be run once per onCreate")
+
         // Check if previously loaded songs are still in memory
         var sharedPreferences = context.getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE)
         val previousListSize = sharedPreferences.getInt(SIZE_KEY, 0)
@@ -41,7 +43,7 @@ object MediaInitialization
         {
             return
         }
-        songState.postValue(SongInitializationState.NOT_YET_INITIALIZED)
+        //songState.postValue(SongInitializationState.NOT_YET_INITIALIZED)
 
         // Remove stale data
         Song.songArrayList.clear()

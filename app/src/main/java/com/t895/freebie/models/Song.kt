@@ -2,7 +2,7 @@ package com.t895.freebie.models
 
 import java.util.ArrayList
 
-class Song(
+data class Song(
     val title: String,
     val artist: String,
     val album: String,

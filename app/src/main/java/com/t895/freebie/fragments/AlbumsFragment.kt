@@ -47,7 +47,6 @@ class AlbumsFragment : Fragment()
 
     private fun refreshAlbums()
     {
-        // Remember to CLEAR OUT old items before appending in the new ones
         adapter.clear()
         AfterSongInitializationRunner().runWithLifecycle(activity) { adapter.addAll(Album.albumArrayList) }
     }

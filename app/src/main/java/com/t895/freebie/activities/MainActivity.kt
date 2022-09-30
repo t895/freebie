@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen
@@ -11,6 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import com.t895.freebie.*
@@ -30,27 +32,34 @@ class MainActivity : AppCompatActivity()
     private val ITEM_SELECTED = "item_selected"
     private val ITEM_KEY = "item"
 
-    private var homeFragment: HomeFragment = HomeFragment()
-    private var albumsFragment: AlbumsFragment = AlbumsFragment()
-    private var artistsFragment: ArtistsFragment = ArtistsFragment()
-    private var settingsFragment: SettingsFragment = SettingsFragment()
+    private lateinit var homeFragment: HomeFragment
+    private lateinit var albumsFragment: AlbumsFragment
+    private lateinit var artistsFragment: ArtistsFragment
+    private lateinit var settingsFragment: SettingsFragment
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         val splashScreen: SplashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition { areSongsReady() }
+        splashScreen.setKeepOnScreenCondition { !areSongsReady() }
 
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (songState.value == MediaInitialization.SongInitializationState.NOT_YET_INITIALIZED) {
-            Thread { MediaInitialization.init(applicationContext) }.start()
+        if (songState.value == MediaInitialization.SongInitializationState.NOT_YET_INITIALIZED)
+        {
+            Thread {
+                MediaInitialization.init(applicationContext)
+            }.start()
         }
 
+        homeFragment = HomeFragment()
+        albumsFragment = AlbumsFragment()
+        artistsFragment = ArtistsFragment()
+        settingsFragment = SettingsFragment()
         binding.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
-            val fragment: Fragment?
-            val fragmentTag: String?
+            val fragment: Fragment
+            val fragmentTag: String
             when (item.itemId)
             {
                 R.id.action_home ->

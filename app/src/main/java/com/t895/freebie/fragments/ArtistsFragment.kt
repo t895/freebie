@@ -48,7 +48,6 @@ class ArtistsFragment : Fragment()
 
     private fun refreshArtists()
     {
-        // Remember to CLEAR OUT old items before appending in the new ones
         adapter.clear()
         AfterSongInitializationRunner().runWithLifecycle(activity) { adapter.addAll(Artist.artistArrayList) }
     }

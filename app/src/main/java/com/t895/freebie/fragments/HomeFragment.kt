@@ -46,7 +46,6 @@ class HomeFragment : Fragment()
 
     private fun refreshSongs()
     {
-        // Remember to CLEAR OUT old items before appending in the new ones
         adapter.clear()
         AfterSongInitializationRunner().runWithLifecycle(activity) { adapter.addAll(Song.songArrayList) }
     }

@@ -1,18 +1,12 @@
 <resources>
     <style name="Theme.Freebie.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/freebie_surface</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher</item>
         <item name="postSplashScreenTheme">@style/Theme.Freebie</item>
     </style>
 
     <!-- Base light theme -->
-    <style name="Theme.Freebie" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/freebie_background</item>
-        <item name="android:windowLightStatusBar">true</item>
-
-        <item name="android:windowActionBarOverlay">true</item>
-
+    <style name="Theme.Freebie" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/freebie_primary</item>
         <item name="colorOnPrimary">@color/freebie_onPrimary</item>
         <item name="colorPrimaryInverse">@color/freebie_primaryInverse</item>
