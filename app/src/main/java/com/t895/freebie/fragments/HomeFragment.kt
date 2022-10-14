@@ -13,8 +13,7 @@ import com.t895.freebie.AfterSongInitializationRunner
 import com.t895.freebie.databinding.FragmentHomeBinding
 import java.util.ArrayList
 
-class HomeFragment : Fragment()
-{
+class HomeFragment : Fragment() {
     private val TAG = "HomeFragment"
 
     private lateinit var adapter: SongsAdapter
@@ -24,8 +23,7 @@ class HomeFragment : Fragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View
-    {
+    ): View {
         // Inflate the layout for this fragment
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -33,7 +31,7 @@ class HomeFragment : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val allSongs = ArrayList<Song>()
+        val allSongs = LinkedHashMap<Int, Song>()
 
         adapter = SongsAdapter(requireContext(), allSongs)
         adapter.stateRestorationPolicy =
@@ -44,9 +42,8 @@ class HomeFragment : Fragment()
         refreshSongs()
     }
 
-    private fun refreshSongs()
-    {
+    private fun refreshSongs() {
         adapter.clear()
-        AfterSongInitializationRunner().runWithLifecycle(activity) { adapter.addAll(Song.songArrayList) }
+        AfterSongInitializationRunner().runWithLifecycle(activity) { adapter.addAll(Song.list) }
     }
 }

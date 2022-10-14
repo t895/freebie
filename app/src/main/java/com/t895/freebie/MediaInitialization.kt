@@ -4,51 +4,51 @@ import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.codepath.asynchttpclient.AsyncHttpClient
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.t895.freebie.models.Album
 import com.t895.freebie.models.Artist
 import com.t895.freebie.models.Song
-import okhttp3.Headers
-import org.json.JSONException
 import java.io.IOException
 
-object MediaInitialization
-{
+object MediaInitialization {
     const val TAG = "SongRetrievalService"
 
     private const val BASE_URL = "https://api.discogs.com/database/"
-    private const val API_KEY = "DHqvPIxOJwmIMQHtHkkoewRydAnSCRwFXnNAOUCI"
+    private const val API_KEY = "DdqsWWJtlNwZacBISHSNstrYdnqmZWqtLMikewEo"
     private const val SONGS_LOADED = "songs_loaded"
     private const val SIZE_KEY = "size"
 
-    var songState: MutableLiveData<SongInitializationState> = MutableLiveData<SongInitializationState>(SongInitializationState.NOT_YET_INITIALIZED)
+    var songState: MutableLiveData<SongInitializationState> =
+        MutableLiveData<SongInitializationState>(SongInitializationState.NOT_YET_INITIALIZED)
 
-    enum class SongInitializationState
-    {
+    private lateinit var queue: RequestQueue
+
+    enum class SongInitializationState {
         NOT_YET_INITIALIZED,
         INITIALIZED
     }
 
-    fun init(context: Context)
-    {
-        Log.e(TAG, "This should be run once per onCreate")
-
+    fun init(context: Context) {
         // Check if previously loaded songs are still in memory
         var sharedPreferences = context.getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE)
         val previousListSize = sharedPreferences.getInt(SIZE_KEY, 0)
-        if (previousListSize == Song.songArrayList.size && Song.songArrayList.size != 0)
-        {
+        if (previousListSize == Song.list.size && Song.list.size != 0) {
+            songState.postValue(SongInitializationState.INITIALIZED)
             return
         }
-        //songState.postValue(SongInitializationState.NOT_YET_INITIALIZED)
+        songState.postValue(SongInitializationState.NOT_YET_INITIALIZED)
+
+        queue = Volley.newRequestQueue(context)
 
         // Remove stale data
-        Song.songArrayList.clear()
-        Album.albumArrayList.clear()
-        Artist.artistArrayList.clear()
+        Song.list.clear()
+        Album.list.clear()
+        Artist.list.clear()
 
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
@@ -67,8 +67,7 @@ object MediaInitialization
             null,
             null
         ).use { songCursor ->
-            if (songCursor!!.moveToFirst())
-            {
+            if (songCursor!!.moveToFirst()) {
                 val songTitleColumn = songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
                 val songArtistColumn =
                     songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
@@ -78,8 +77,7 @@ object MediaInitialization
                     songCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
                 var filePathUri: Uri
 
-                do
-                {
+                do {
                     // Retrieve song path
                     filePathUri = Uri.parse(songCursor.getString(songPathColumn))
 
@@ -96,136 +94,68 @@ object MediaInitialization
                     val length: String =
                         if (seconds.length == 1) "$minutes:0$seconds" else "$minutes:$seconds"
 
-                    // Find unique artists to add into artist collection
-                    if (Artist.artistArrayList.size == 0)
-                    {
-                        getArtistDetails(artistString)
-                    }
-                    else
-                    {
-                        for (i in Artist.artistArrayList.indices)
-                        {
-                            if (Artist.artistArrayList[i].name == artistString)
-                            {
-                                break
-                            }
-
-                            if (i == Artist.artistArrayList.size - 1)
-                            {
-                                getArtistDetails(artistString)
-                            }
-                        }
-                    }
-
-                    // Find unique albums to add into album collection and decode relevant album art
-                    if (Album.albumArrayList.size == 0)
-                    {
-                        val albumItem = Album(albumString, artistString, "song:$filePathUri")
-                        Album.albumArrayList.add(albumItem)
-                    }
-                    else
-                    {
-                        for (i in Album.albumArrayList.indices)
-                        {
-                            if (Album.albumArrayList[i].title == albumString)
-                            {
-                                break
-                            }
-
-                            if (i == Album.albumArrayList.size - 1)
-                            {
-                                val albumItem =
-                                    Album(albumString, artistString, "song:$filePathUri")
-                                Album.albumArrayList.add(albumItem)
-                            }
-                        }
-                    }
                     val song =
                         Song(titleString, artistString, albumString, length, "song:$filePathUri")
-                    Song.songArrayList.add(song)
-                    Log.e(TAG, "Added song - " + song.title)
+                    Song.list[song.title.hashCode()] = song
                 } while (songCursor.moveToNext())
             }
         }
 
-        try
-        {
-            mediaMetadataRetriever.release()
+        // Create album/artist objects based on what songs were found
+        for (song in Song.list.values) {
+            if (!Album.list.containsKey(song.album.hashCode())) {
+                Album.list[song.album.hashCode()] = Album(song.album, song.artist, song.uri)
+            }
+
+            if (!Artist.list.containsKey(song.artist.hashCode())) {
+                Artist.list[song.artist.hashCode()] = Artist(song.artist, "")
+            }
         }
-        catch (e: IOException)
-        {
+
+        fetchArtistImages()
+
+        try {
+            mediaMetadataRetriever.release()
+        } catch (e: IOException) {
             e.printStackTrace()
         }
 
         sharedPreferences = context.getSharedPreferences(SONGS_LOADED, Context.MODE_PRIVATE)
         val myEdit = sharedPreferences.edit()
-        myEdit.putInt(SIZE_KEY, Song.songArrayList.size)
+        myEdit.putInt(SIZE_KEY, Song.list.size)
         myEdit.apply()
         songState.postValue(SongInitializationState.INITIALIZED)
     }
 
-    private fun getArtistDetails(artistString: String)
-    {
-        // Put together elements of request URL
-        val artistNameURL = artistString.replace(" ".toRegex(), "%20")
-        val requestURL = (BASE_URL + "search?q=" + artistNameURL + "&per_page=1"
-                + "&token=" + API_KEY)
-
-        val artistItem = Artist(artistString, null)
-        Artist.artistArrayList.add(artistItem)
-
-        var currentSongIndex = 0
-        if (Artist.artistArrayList.size > 1)
-        {
-            currentSongIndex = Artist.artistArrayList.size - 1
-        }
-
-        val client = AsyncHttpClient()
-        val finalCurrentSongIndex = currentSongIndex
-        client[requestURL, object : JsonHttpResponseHandler()
-        {
-            override fun onSuccess(statusCode: Int, headers: Headers, json: JSON)
-            {
-                Log.d(TAG, "onSuccess")
-                var artistPicture: String?
-                val jsonObject = json.jsonObject
-                try {
-                    val results = jsonObject.getJSONArray("results")
+    private fun fetchArtistImages() {
+        for (artist in Artist.list.values) {
+            // Put together elements of request URL
+            val artistNameURL = artist.name.replace(" ".toRegex(), "%20")
+            val requestURL =
+                (BASE_URL + "search?q=" + artistNameURL + "&per_page=1" + "&token=" + API_KEY)
+            val jsonRequest = JsonObjectRequest(
+                Request.Method.GET, requestURL, null,
+                {
+                    val results = it.getJSONArray("results")
                     val artistData = results.getJSONObject(0)
-                    artistPicture = artistData.getString("cover_image")
-                    if (artistPicture.contains(".gif"))
-                    {
-                        artistPicture = null
+                    val artistPicture = artistData.getString("cover_image")
+                    if (artistPicture.contains(".gif")) {
+                        artist.profilePicture = ""
+                    } else if (artistPicture != "") {
+                        artist.profilePicture = artistPicture
                     }
-                }
-                catch (e: JSONException)
+                },
                 {
-                    Log.e(TAG, "Hit json exception", e)
-                    e.printStackTrace()
-                    Artist.artistArrayList[finalCurrentSongIndex].profilePicture = null.toString()
-                    return
-                }
-                if (artistPicture != null)
-                {
-                    Artist.artistArrayList[finalCurrentSongIndex].profilePicture = artistPicture
-                }
-            }
-
-            override fun onFailure(
-                statusCode: Int,
-                headers: Headers,
-                response: String,
-                throwable: Throwable
-            )
-            {
-                Log.d(TAG, "Failed!")
-                Log.d(TAG, throwable.message!!)
-            }
-        }]
+                    it.printStackTrace()
+                    artist.profilePicture = ""
+                })
+            jsonRequest.retryPolicy =
+                DefaultRetryPolicy(5000, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            queue.add(jsonRequest)
+        }
     }
 
-    fun areSongsReady(): Boolean
-    {
+    fun areSongsReady(): Boolean {
         return songState.value == SongInitializationState.INITIALIZED
     }
 }

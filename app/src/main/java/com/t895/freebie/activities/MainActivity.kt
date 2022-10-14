@@ -25,8 +25,7 @@ import com.t895.freebie.fragments.HomeFragment
 import com.t895.freebie.fragments.SettingsFragment
 import java.util.concurrent.ExecutionException
 
-class MainActivity : AppCompatActivity()
-{
+class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
     private val ITEM_SELECTED = "item_selected"
@@ -37,8 +36,7 @@ class MainActivity : AppCompatActivity()
     private lateinit var artistsFragment: ArtistsFragment
     private lateinit var settingsFragment: SettingsFragment
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen: SplashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { !areSongsReady() }
 
@@ -46,8 +44,7 @@ class MainActivity : AppCompatActivity()
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (songState.value == MediaInitialization.SongInitializationState.NOT_YET_INITIALIZED)
-        {
+        if (songState.value == MediaInitialization.SongInitializationState.NOT_YET_INITIALIZED) {
             Thread {
                 MediaInitialization.init(applicationContext)
             }.start()
@@ -60,30 +57,24 @@ class MainActivity : AppCompatActivity()
         binding.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
             val fragment: Fragment
             val fragmentTag: String
-            when (item.itemId)
-            {
-                R.id.action_home ->
-                {
+            when (item.itemId) {
+                R.id.action_home -> {
                     fragment = homeFragment
                     fragmentTag = "HomeFragment"
                 }
-                R.id.action_albums ->
-                {
+                R.id.action_albums -> {
                     fragment = albumsFragment
                     fragmentTag = "AlbumsFragment"
                 }
-                R.id.action_artists ->
-                {
+                R.id.action_artists -> {
                     fragment = artistsFragment
                     fragmentTag = "ArtistsFragment"
                 }
-                R.id.action_settings ->
-                {
+                R.id.action_settings -> {
                     fragment = settingsFragment
                     fragmentTag = "SettingsFragment"
                 }
-                else ->
-                {
+                else -> {
                     fragment = homeFragment
                     fragmentTag = "HomeFragment"
                 }
@@ -113,18 +104,14 @@ class MainActivity : AppCompatActivity()
         val sharedPreferences: SharedPreferences = applicationContext
             .getSharedPreferences(ITEM_SELECTED, Context.MODE_PRIVATE)
         val previouslySelectedItem: Int = sharedPreferences.getInt(ITEM_KEY, 0)
-        if (previouslySelectedItem != 0)
-        {
+        if (previouslySelectedItem != 0) {
             binding.bottomNavigation.selectedItemId = previouslySelectedItem
-        }
-        else
-        {
+        } else {
             binding.bottomNavigation.selectedItemId = R.id.action_home
         }
     }
 
-    override fun onStart()
-    {
+    override fun onStart() {
         val sessionToken = SessionToken(this, ComponentName(this, PlaybackService::class.java))
         val controllerFuture: ListenableFuture<MediaController> =
             MediaController.Builder(this, sessionToken).buildAsync()
@@ -140,8 +127,7 @@ class MainActivity : AppCompatActivity()
         super.onStart()
     }
 
-    override fun onStop()
-    {
+    override fun onStop() {
         super.onStop()
         val sessionToken = SessionToken(this, ComponentName(this, PlaybackService::class.java))
         val controllerFuture: ListenableFuture<MediaController> =

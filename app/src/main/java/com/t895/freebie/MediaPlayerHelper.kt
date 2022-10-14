@@ -4,17 +4,14 @@ import androidx.media3.common.MediaItem
 import androidx.media3.session.MediaController
 import com.t895.freebie.models.Song
 
-class MediaPlayerHelper
-{
+class MediaPlayerHelper {
     private val TAG = "MediaPlayerHelper"
 
-    companion object
-    {
+    companion object {
         var player: MediaController? = null
         private var currentlyPlayingSong: Song? = null
 
-        fun playSong(song: Song)
-        {
+        fun playSong(song: Song) {
             player!!.removeMediaItems(0, 1)
             currentlyPlayingSong = song
             val mediaItem = MediaItem.Builder()

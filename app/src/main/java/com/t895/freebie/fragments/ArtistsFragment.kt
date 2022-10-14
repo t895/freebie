@@ -13,11 +13,10 @@ import com.t895.freebie.databinding.FragmentArtistsBinding
 import com.t895.freebie.models.Artist
 import java.util.ArrayList
 
-class ArtistsFragment : Fragment()
-{
+class ArtistsFragment : Fragment() {
     private val TAG = "ArtistsFragment"
 
-    private lateinit var allArtists: ArrayList<Artist>
+    private var allArtists: LinkedHashMap<Int, Artist> = LinkedHashMap()
     private lateinit var adapter: ArtistsAdapter
 
     private lateinit var mBinding: FragmentArtistsBinding
@@ -25,17 +24,14 @@ class ArtistsFragment : Fragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View
-    {
+    ): View {
         // Inflate the layout for this fragment
         mBinding = FragmentArtistsBinding.inflate(inflater, container, false)
         return mBinding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-    {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        allArtists = ArrayList()
 
         adapter = ArtistsAdapter(requireContext(), allArtists)
         adapter.stateRestorationPolicy =
@@ -46,9 +42,8 @@ class ArtistsFragment : Fragment()
         refreshArtists()
     }
 
-    private fun refreshArtists()
-    {
+    private fun refreshArtists() {
         adapter.clear()
-        AfterSongInitializationRunner().runWithLifecycle(activity) { adapter.addAll(Artist.artistArrayList) }
+        AfterSongInitializationRunner().runWithLifecycle(activity) { adapter.addAll(Artist.list) }
     }
 }

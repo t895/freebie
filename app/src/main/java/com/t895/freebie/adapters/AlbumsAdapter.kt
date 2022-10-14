@@ -18,34 +18,33 @@ import com.t895.freebie.databinding.ItemAlbumBinding
 import com.t895.freebie.utils.RoundedCornerHelper
 import java.util.ArrayList
 
-class AlbumsAdapter(private val context: Context, var albums: ArrayList<Album>) :
-    RecyclerView.Adapter<AlbumsAdapter.ViewHolder>()
-{
+class AlbumsAdapter(private val context: Context, var albums: LinkedHashMap<Int, Album>) :
+    RecyclerView.Adapter<AlbumsAdapter.ViewHolder>() {
     private val TAG = "AlbumsAdapter"
+
+    private lateinit var keys: IntArray
 
     private val requestOptions: RequestOptions = RequestOptions().transform(
         CenterCrop(),
-        RoundedCorners(dpToPx(context, RoundedCornerHelper.EIGHT_DP)))
+        RoundedCorners(dpToPx(context, RoundedCornerHelper.EIGHT_DP))
+    )
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-    {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        keys = albums.keys.toIntArray()
         return ViewHolder(ItemAlbumBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int)
-    {
-        holder.bind(albums[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(albums[keys[position]]!!)
     }
 
-    override fun getItemCount(): Int
-    {
+    override fun getItemCount(): Int {
         return albums.size
     }
 
-    inner class ViewHolder(private val itemBinding: ItemAlbumBinding) : RecyclerView.ViewHolder(itemBinding.root)
-    {
-        fun bind(album: Album)
-        {
+    inner class ViewHolder(private val itemBinding: ItemAlbumBinding) :
+        RecyclerView.ViewHolder(itemBinding.root) {
+        fun bind(album: Album) {
             itemBinding.tvAlbumTitle.text = album.title
             itemBinding.tvAlbumArtist.text = album.artist
 
@@ -65,16 +64,14 @@ class AlbumsAdapter(private val context: Context, var albums: ArrayList<Album>) 
     }
 
     // Clean all elements of the recycler
-    fun clear()
-    {
+    fun clear() {
         albums.clear()
         notifyDataSetChanged()
     }
 
     // Add a list of items
-    fun addAll(albums: List<Album>)
-    {
-        this.albums.addAll(albums)
+    fun addAll(albums: LinkedHashMap<Int, Album>) {
+        this.albums.putAll(albums)
         notifyDataSetChanged()
     }
 }

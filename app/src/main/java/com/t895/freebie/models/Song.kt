@@ -1,17 +1,13 @@
 package com.t895.freebie.models
 
-import java.util.ArrayList
-
 data class Song(
     val title: String,
     val artist: String,
     val album: String,
     val length: String,
     val uri: String
-)
-{
-    companion object
-    {
-        var songArrayList = ArrayList<Song>()
+) {
+    companion object {
+        var list = LinkedHashMap<Int, Song>()
     }
 }

@@ -19,8 +19,8 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -65,5 +65,5 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.14.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.0'
 
-    implementation 'com.codepath.libraries:asynchttpclient:2.2.0'
+    implementation 'com.android.volley:volley:1.2.1'
 }

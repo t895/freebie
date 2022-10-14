@@ -14,16 +14,14 @@ import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import com.t895.freebie.databinding.ActivitySetupBinding
 
-class SetupActivity : AppCompatActivity()
-{
+class SetupActivity : AppCompatActivity() {
     private val TAG = "SetupActivity"
 
     private lateinit var btnPermission: Button
     private var startButtonClicked = false
     private var requestPermissionLauncher: ActivityResultLauncher<String>? = null
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivitySetupBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -32,12 +30,9 @@ class SetupActivity : AppCompatActivity()
 
         requestPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted: Boolean ->
-                if (granted)
-                {
+                if (granted) {
                     btnPermission.setText(R.string.start_app)
-                }
-                else
-                {
+                } else {
                     Toast.makeText(
                         applicationContext, R.string.permission_denied_toast,
                         Toast.LENGTH_LONG
@@ -45,34 +40,32 @@ class SetupActivity : AppCompatActivity()
                 }
             }
 
-        if (ContextCompat.checkSelfPermission(applicationContext,
-                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(applicationContext,
-                Manifest.permission.READ_MEDIA_AUDIO) == PackageManager.PERMISSION_GRANTED)
-        {
+        if (ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.READ_MEDIA_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             goToMainActivity()
         }
 
         btnPermission.setOnClickListener {
             if (ContextCompat
                     .checkSelfPermission(applicationContext, Manifest.permission.READ_MEDIA_AUDIO)
-                != PackageManager.PERMISSION_GRANTED)
-            {
+                != PackageManager.PERMISSION_GRANTED
+            ) {
                 // Request permission
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     requestPermissionLauncher!!.launch(Manifest.permission.READ_MEDIA_AUDIO)
-                }
-                else
-                {
+                } else {
                     requestPermissionLauncher!!.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
                 }
-            }
-            else
-            {
+            } else {
                 // Button enters main activity when permissions are granted
-                if (startButtonClicked)
-                {
+                if (startButtonClicked) {
                     return@setOnClickListener
                 }
                 goToMainActivity()
@@ -81,8 +74,7 @@ class SetupActivity : AppCompatActivity()
         }
     }
 
-    private fun goToMainActivity()
-    {
+    private fun goToMainActivity() {
         val i = Intent(this, MainActivity::class.java)
         startActivity(i)
         finish()

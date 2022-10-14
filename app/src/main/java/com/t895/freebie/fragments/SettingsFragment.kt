@@ -8,8 +8,7 @@ import androidx.fragment.app.Fragment
 import com.t895.freebie.R
 import com.t895.freebie.databinding.FragmentSettingsBinding
 
-class SettingsFragment : Fragment()
-{
+class SettingsFragment : Fragment() {
     private val TAG = "SettingsFragment"
 
     private lateinit var mBinding: FragmentSettingsBinding
@@ -17,8 +16,7 @@ class SettingsFragment : Fragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View
-    {
+    ): View {
         // Inflate the layout for this fragment
         mBinding = FragmentSettingsBinding.inflate(inflater, container, false)
         return mBinding.root

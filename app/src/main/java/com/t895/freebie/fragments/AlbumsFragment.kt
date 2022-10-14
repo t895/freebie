@@ -11,13 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.t895.freebie.AfterSongInitializationRunner
 import com.t895.freebie.databinding.FragmentAlbumsBinding
-import java.util.ArrayList
 
-class AlbumsFragment : Fragment()
-{
+class AlbumsFragment : Fragment() {
     private val TAG = "AlbumsFragment"
 
-    private lateinit var allAlbums: ArrayList<Album>
+    private val allAlbums: LinkedHashMap<Int, Album> = LinkedHashMap()
     private lateinit var adapter: AlbumsAdapter
 
     private lateinit var mBinding: FragmentAlbumsBinding
@@ -25,8 +23,7 @@ class AlbumsFragment : Fragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View
-    {
+    ): View {
         // Inflate the layout for this fragment
         mBinding = FragmentAlbumsBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -34,7 +31,6 @@ class AlbumsFragment : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        allAlbums = ArrayList()
 
         adapter = AlbumsAdapter(requireContext(), allAlbums)
         adapter.stateRestorationPolicy =
@@ -45,9 +41,8 @@ class AlbumsFragment : Fragment()
         refreshAlbums()
     }
 
-    private fun refreshAlbums()
-    {
+    private fun refreshAlbums() {
         adapter.clear()
-        AfterSongInitializationRunner().runWithLifecycle(activity) { adapter.addAll(Album.albumArrayList) }
+        AfterSongInitializationRunner().runWithLifecycle(activity) { adapter.addAll(Album.list) }
     }
 }

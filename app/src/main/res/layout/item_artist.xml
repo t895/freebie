@@ -12,20 +12,12 @@
     android:padding="8dp"
     android:clipToPadding="false">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:elevation="8dp"
-        app:cardCornerRadius="256dp">
-
-        <ImageView
-            android:id="@+id/ivArtist"
-            android:layout_width="190dp"
-            android:layout_height="196dp"
-            android:layout_gravity="center_horizontal"
-            tools:srcCompat="@tools:sample/avatars" />
-
-    </androidx.cardview.widget.CardView>
+    <ImageView
+        android:id="@+id/ivArtist"
+        android:layout_width="190dp"
+        android:layout_height="196dp"
+        android:layout_gravity="center_horizontal"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvArtistName"
