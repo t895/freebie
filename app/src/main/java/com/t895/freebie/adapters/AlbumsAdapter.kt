@@ -16,7 +16,6 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.t895.freebie.databinding.ItemAlbumBinding
 import com.t895.freebie.utils.RoundedCornerHelper
-import java.util.ArrayList
 
 class AlbumsAdapter(private val context: Context, var albums: LinkedHashMap<Int, Album>) :
     RecyclerView.Adapter<AlbumsAdapter.ViewHolder>() {
@@ -63,15 +62,8 @@ class AlbumsAdapter(private val context: Context, var albums: LinkedHashMap<Int,
         }
     }
 
-    // Clean all elements of the recycler
-    fun clear() {
-        albums.clear()
-        notifyDataSetChanged()
-    }
-
-    // Add a list of items
-    fun addAll(albums: LinkedHashMap<Int, Album>) {
-        this.albums.putAll(albums)
+    fun swapData(albums: LinkedHashMap<Int, Album>) {
+        this.albums = albums
         notifyDataSetChanged()
     }
 }

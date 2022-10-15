@@ -1,6 +1,5 @@
 package com.t895.freebie.fragments
 
-import androidx.recyclerview.widget.RecyclerView
 import com.t895.freebie.models.Album
 import com.t895.freebie.adapters.AlbumsAdapter
 import android.os.Bundle
@@ -14,11 +13,11 @@ import com.t895.freebie.databinding.FragmentAlbumsBinding
 
 class AlbumsFragment : Fragment() {
     private val TAG = "AlbumsFragment"
-
-    private val allAlbums: LinkedHashMap<Int, Album> = LinkedHashMap()
-    private lateinit var adapter: AlbumsAdapter
-
     private lateinit var mBinding: FragmentAlbumsBinding
+
+    private val albumsAdapter by lazy {
+        AlbumsAdapter(requireContext(), LinkedHashMap())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,18 +30,12 @@ class AlbumsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        adapter = AlbumsAdapter(requireContext(), allAlbums)
-        adapter.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-
-        mBinding.rvAlbums.adapter = adapter
-        mBinding.rvAlbums.layoutManager = GridLayoutManager(context, 2)
-        refreshAlbums()
-    }
-
-    private fun refreshAlbums() {
-        adapter.clear()
-        AfterSongInitializationRunner().runWithLifecycle(activity) { adapter.addAll(Album.list) }
+        AfterSongInitializationRunner().runWithLifecycle(activity) {
+            albumsAdapter.swapData(Album.list)
+            mBinding.rvAlbums.apply {
+                layoutManager = GridLayoutManager(context, 2)
+                adapter = albumsAdapter
+            }
+        }
     }
 }

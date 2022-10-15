@@ -6,27 +6,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import android.view.ViewGroup
 import android.view.LayoutInflater
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.t895.freebie.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.t895.freebie.MediaInitialization
 import com.t895.freebie.databinding.ItemArtistBinding
 import com.t895.freebie.models.Artist
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.json.JSONObject
 import java.lang.Exception
-import java.util.ArrayList
 
 class ArtistsAdapter(private val context: Context, var artists: LinkedHashMap<Int, Artist>) :
     RecyclerView.Adapter<ArtistsAdapter.ViewHolder>() {
@@ -74,15 +62,9 @@ class ArtistsAdapter(private val context: Context, var artists: LinkedHashMap<In
         }
     }
 
-    // Clean all elements of the recycler
-    fun clear() {
-        artists.clear()
-        notifyDataSetChanged()
-    }
-
     // Add a list of items -- change to type used
-    fun addAll(artists: LinkedHashMap<Int, Artist>) {
-        this.artists.putAll(artists)
+    fun swapData(artists: LinkedHashMap<Int, Artist>) {
+        this.artists = artists
         notifyDataSetChanged()
     }
 }

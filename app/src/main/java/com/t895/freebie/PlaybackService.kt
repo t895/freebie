@@ -6,6 +6,7 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 
 class PlaybackService : MediaSessionService() {
+    private val TAG = "PlaybackService"
     private var mediaSession: MediaSession? = null
 
     // Create your Player and MediaSession in the onCreate lifecycle event

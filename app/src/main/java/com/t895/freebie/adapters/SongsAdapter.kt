@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.t895.freebie.databinding.ItemSongBinding
 import com.t895.freebie.utils.RoundedCornerHelper
-import java.util.ArrayList
 
 class SongsAdapter(private val context: Context, var songs: LinkedHashMap<Int, Song>) :
 RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
@@ -40,9 +39,11 @@ RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
     inner class ViewHolder(private val itemBinding: ItemSongBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(song: Song) {
-            itemBinding.tvTitle.text = song.title
-            itemBinding.tvArtist.text = song.artist
-            itemBinding.tvSongLength.text = song.length
+            itemBinding.apply {
+                tvTitle.text = song.title
+                tvArtist.text = song.artist
+                tvSongLength.text = song.length
+            }
 
             itemBinding.btnSong.setOnClickListener {
                 Log.d(TAG, song.title + " was clicked!")
@@ -57,15 +58,8 @@ RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
         }
     }
 
-    // Clean all elements of the recycler
-    fun clear() {
-        songs.clear()
-        notifyDataSetChanged()
-    }
-
-    // Add a list of items -- change to type used
-    fun addAll(songs: LinkedHashMap<Int, Song>) {
-        this.songs.putAll(songs)
+    fun swapData(songs: LinkedHashMap<Int, Song>) {
+        this.songs = songs
         notifyDataSetChanged()
     }
 }
