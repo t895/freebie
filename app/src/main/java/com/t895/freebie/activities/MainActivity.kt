@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.ViewGroup.MarginLayoutParams
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -15,6 +16,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import com.t895.freebie.*
@@ -25,6 +28,7 @@ import com.t895.freebie.fragments.AlbumsFragment
 import com.t895.freebie.fragments.ArtistsFragment
 import com.t895.freebie.fragments.HomeFragment
 import com.t895.freebie.fragments.SettingsFragment
+import com.t895.freebie.utils.ThemeHelper
 import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
@@ -43,6 +47,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen: SplashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { !areSongsReady() }
+
+        ThemeHelper.setTheme(this)
 
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -156,9 +162,21 @@ class MainActivity : AppCompatActivity() {
 
             // Wait until the BottomNavigationView is drawn on screen before getting the height
             mBinding.bottomNavigation.post {
-                mBinding.flContainer.setPadding(0, 0, 0, mBinding.bottomNavigation.measuredHeight + insets.bottom)
+                mBinding.flContainer.setPadding(
+                    0,
+                    0,
+                    0,
+                    mBinding.bottomNavigation.measuredHeight + insets.bottom
+                )
             }
 
+            @ColorInt val navigationBarColor: Int = ElevationOverlayProvider(this).compositeOverlay(
+                MaterialColors.getColor(
+                    window.decorView,
+                    R.attr.colorSurface
+                ), mBinding.bottomNavigation.elevation
+            )
+            ThemeHelper.setNavigationBarColor(this, navigationBarColor)
             windowInsets
         }
     }

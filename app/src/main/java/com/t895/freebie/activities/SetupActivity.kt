@@ -10,23 +10,36 @@ import androidx.core.content.ContextCompat
 import android.content.pm.PackageManager
 import android.os.Build
 import android.content.Intent
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.ColorInt
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.color.MaterialColors
 import com.t895.freebie.databinding.ActivitySetupBinding
+import com.t895.freebie.utils.ThemeHelper
 
 class SetupActivity : AppCompatActivity() {
     private val TAG = "SetupActivity"
+
+    private lateinit var mBinding: ActivitySetupBinding
 
     private lateinit var btnPermission: Button
     private var startButtonClicked = false
     private var requestPermissionLauncher: ActivityResultLauncher<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivitySetupBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        ThemeHelper.setTheme(this)
 
-        btnPermission = binding.btnPermission
+        super.onCreate(savedInstanceState)
+        mBinding = ActivitySetupBinding.inflate(layoutInflater)
+        setContentView(mBinding.root)
+
+        setInsets()
+
+        btnPermission = mBinding.btnPermission
 
         requestPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted: Boolean ->
@@ -78,5 +91,25 @@ class SetupActivity : AppCompatActivity() {
         val i = Intent(this, MainActivity::class.java)
         startActivity(i)
         finish()
+    }
+
+    private fun setInsets() {
+        // Don't fit system windows
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        // Insets for app bar
+        ViewCompat.setOnApplyWindowInsetsListener(mBinding.root) { _, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val mlp = mBinding.root.layoutParams as ViewGroup.MarginLayoutParams
+            mlp.topMargin = insets.top
+            mlp.bottomMargin = insets.bottom
+            mBinding.root.layoutParams = mlp
+
+            @ColorInt val color: Int =
+                MaterialColors.getColor(window.decorView, R.attr.colorSurface)
+            ThemeHelper.setNavigationBarColor(this, color)
+
+            windowInsets
+        }
     }
 }
