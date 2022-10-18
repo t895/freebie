@@ -2,7 +2,6 @@ package com.t895.freebie.adapters
 
 import android.content.Context
 import android.util.Log
-import com.t895.freebie.utils.RoundedCornerHelper.dpToPx
 import com.t895.freebie.models.Album
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
@@ -15,7 +14,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.t895.freebie.databinding.ItemAlbumBinding
-import com.t895.freebie.utils.RoundedCornerHelper
+import com.t895.freebie.utils.InsetsHelper
 
 class AlbumsAdapter(private val context: Context, var albums: LinkedHashMap<Int, Album>) :
     RecyclerView.Adapter<AlbumsAdapter.ViewHolder>() {
@@ -25,7 +24,7 @@ class AlbumsAdapter(private val context: Context, var albums: LinkedHashMap<Int,
 
     private val requestOptions: RequestOptions = RequestOptions().transform(
         CenterCrop(),
-        RoundedCorners(dpToPx(context, RoundedCornerHelper.EIGHT_DP))
+        RoundedCorners(InsetsHelper.dpToPx(context, InsetsHelper.EIGHT_DP))
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

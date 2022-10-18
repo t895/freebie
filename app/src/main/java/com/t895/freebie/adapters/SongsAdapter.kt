@@ -11,7 +11,7 @@ import com.t895.freebie.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.t895.freebie.databinding.ItemSongBinding
-import com.t895.freebie.utils.RoundedCornerHelper
+import com.t895.freebie.utils.InsetsHelper
 
 class SongsAdapter(private val context: Context, var songs: LinkedHashMap<Int, Song>) :
 RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
@@ -20,7 +20,7 @@ RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
     private lateinit var keys: IntArray
 
     private val requestOptions: RequestOptions = RequestOptions().transform(
-        RoundedCorners(RoundedCornerHelper.dpToPx(context, RoundedCornerHelper.EIGHT_DP))
+        RoundedCorners(InsetsHelper.dpToPx(context, InsetsHelper.EIGHT_DP))
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -54,7 +54,7 @@ RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
                 .apply(requestOptions)
                 .placeholder(R.drawable.ic_image_loading)
                 .error(R.drawable.ic_image_loading)
-                .into(itemBinding.ivAlbum)
+                .into(itemBinding.ivSongCover)
         }
     }
 

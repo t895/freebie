@@ -10,6 +10,7 @@ import com.t895.freebie.models.Song
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.t895.freebie.AfterSongInitializationRunner
 import com.t895.freebie.databinding.FragmentHomeBinding
+import com.t895.freebie.utils.InsetsHelper
 
 class HomeFragment : Fragment() {
     private val TAG = "HomeFragment"
@@ -27,6 +28,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        InsetsHelper.setListInsets(mBinding.rvSongs, requireContext())
         songsAdapter = SongsAdapter(requireContext(), LinkedHashMap())
         AfterSongInitializationRunner().runWithLifecycle(activity) {
             songsAdapter.swapData(Song.list)

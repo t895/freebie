@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.t895.freebie.AfterSongInitializationRunner
 import com.t895.freebie.databinding.FragmentAlbumsBinding
+import com.t895.freebie.utils.InsetsHelper
 
 class AlbumsFragment : Fragment() {
     private val TAG = "AlbumsFragment"
@@ -28,6 +29,7 @@ class AlbumsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        InsetsHelper.setListInsets(mBinding.rvAlbums, requireContext())
         albumsAdapter = AlbumsAdapter(requireContext(), LinkedHashMap())
         AfterSongInitializationRunner().runWithLifecycle(activity) {
             albumsAdapter.swapData(Album.list)

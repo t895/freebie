@@ -6,7 +6,6 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.color.MaterialColors
 import com.t895.freebie.R
 import kotlin.math.roundToInt
@@ -26,8 +25,8 @@ object ThemeHelper {
 
     fun setNavigationBarColor(activity: AppCompatActivity, @ColorInt color: Int) {
         var gestureInset = 0
-        if (Build.VERSION.SDK_INT >= 30) {
-            gestureInset = activity.window.decorView.rootWindowInsets.getInsets(WindowInsetsCompat.Type.systemGestures()).left
+        if (Build.VERSION.SDK_INT >= 29) {
+            gestureInset = activity.window.decorView.rootWindowInsets.systemWindowInsetLeft
         }
 
         if (gestureInset == 0) {

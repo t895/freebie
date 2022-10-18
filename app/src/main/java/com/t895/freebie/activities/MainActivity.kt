@@ -19,7 +19,6 @@ import androidx.media3.session.SessionToken
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.navigationrail.NavigationRailView
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import com.t895.freebie.*
@@ -68,31 +67,30 @@ class MainActivity : AppCompatActivity() {
         albumsFragment = AlbumsFragment()
         artistsFragment = ArtistsFragment()
         settingsFragment = SettingsFragment()
-
         val navigation: NavigationBarView = mBinding.bottomNavigation as NavigationBarView
         navigation.setOnItemSelectedListener { item: MenuItem ->
             val fragment: Fragment
-            val fragmentTag: String
+            val tag: String
             when (item.itemId) {
                 R.id.action_home -> {
                     fragment = homeFragment
-                    fragmentTag = "HomeFragment"
+                    tag = "HomeFragment"
                 }
                 R.id.action_albums -> {
                     fragment = albumsFragment
-                    fragmentTag = "AlbumsFragment"
+                    tag = "AlbumsFragment"
                 }
                 R.id.action_artists -> {
                     fragment = artistsFragment
-                    fragmentTag = "ArtistsFragment"
+                    tag = "ArtistsFragment"
                 }
                 R.id.action_settings -> {
                     fragment = settingsFragment
-                    fragmentTag = "SettingsFragment"
+                    tag = "SettingsFragment"
                 }
                 else -> {
                     fragment = homeFragment
-                    fragmentTag = "HomeFragment"
+                    tag = "HomeFragment"
                 }
             }
 
@@ -107,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                     R.anim.fade_in,
                     R.anim.fade_out
                 )
-                .replace(R.id.flContainer, fragment, fragmentTag).commit()
+                .replace(R.id.flContainer, fragment, tag).commit()
             true
         }
 
@@ -159,16 +157,6 @@ class MainActivity : AppCompatActivity() {
             val mlp = mBinding.appBarLayout.layoutParams as MarginLayoutParams
             mlp.topMargin = insets.top
             mBinding.appBarLayout.layoutParams = mlp
-
-            // Wait until the BottomNavigationView is drawn on screen before getting the height
-            mBinding.bottomNavigation.post {
-                mBinding.flContainer.setPadding(
-                    0,
-                    0,
-                    0,
-                    mBinding.bottomNavigation.measuredHeight + insets.bottom
-                )
-            }
 
             @ColorInt val navigationBarColor: Int = ElevationOverlayProvider(this).compositeOverlay(
                 MaterialColors.getColor(
