@@ -15,7 +15,6 @@ class AfterSongInitializationRunner {
         } else {
             mObserver = createObserver(runnable)
             if (activity != null) {
-                Log.e(TAG, "Huh")
                 MediaInitialization.songState.observe(activity, mObserver)
             }
         }

@@ -1,6 +1,7 @@
 package com.t895.freebie.utils;
 
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -13,6 +14,8 @@ import java.nio.ByteBuffer;
 
 public class SongDataFetcher implements DataFetcher<ByteBuffer>
 {
+  private static final String TAG = "SongDataFetcher";
+
   private final String model;
   MediaMetadataRetriever mediaMetadataRetriever;
 
@@ -30,7 +33,12 @@ public class SongDataFetcher implements DataFetcher<ByteBuffer>
     mediaMetadataRetriever.setDataSource(model.substring(5));
     // Get the picture ready for Glide rendering
     byte[] data = mediaMetadataRetriever.getEmbeddedPicture();
-    ByteBuffer byteBuffer = ByteBuffer.wrap(data);
+
+    ByteBuffer byteBuffer = null;
+    try {
+      byteBuffer = ByteBuffer.wrap(data);
+    } catch (NullPointerException e) { Log.e(TAG, "Tried to load null image"); }
+
     callback.onDataReady(byteBuffer);
   }
 

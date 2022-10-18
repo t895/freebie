@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/btnArtist"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
@@ -17,22 +17,25 @@
         android:layout_width="190dp"
         android:layout_height="196dp"
         android:layout_gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvArtistName"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:ellipsize="end"
-        android:lines="1"
-        android:maxWidth="128dp"
         android:maxLines="2"
+        android:maxWidth="128dp"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.Material3.ActionBar.Title"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@id/ivArtist"
+        app:layout_constraintStart_toStartOf="@id/ivArtist"
+        app:layout_constraintTop_toBottomOf="@id/ivArtist"
         tools:text="Artist Name" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 

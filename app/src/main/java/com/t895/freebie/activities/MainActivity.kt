@@ -18,6 +18,8 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.elevation.ElevationOverlayProvider
+import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.navigationrail.NavigationRailView
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import com.t895.freebie.*
@@ -66,7 +68,9 @@ class MainActivity : AppCompatActivity() {
         albumsFragment = AlbumsFragment()
         artistsFragment = ArtistsFragment()
         settingsFragment = SettingsFragment()
-        mBinding.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
+
+        val navigation: NavigationBarView = mBinding.bottomNavigation as NavigationBarView
+        navigation.setOnItemSelectedListener { item: MenuItem ->
             val fragment: Fragment
             val fragmentTag: String
             when (item.itemId) {
@@ -74,22 +78,18 @@ class MainActivity : AppCompatActivity() {
                     fragment = homeFragment
                     fragmentTag = "HomeFragment"
                 }
-
                 R.id.action_albums -> {
                     fragment = albumsFragment
                     fragmentTag = "AlbumsFragment"
                 }
-
                 R.id.action_artists -> {
                     fragment = artistsFragment
                     fragmentTag = "ArtistsFragment"
                 }
-
                 R.id.action_settings -> {
                     fragment = settingsFragment
                     fragmentTag = "SettingsFragment"
                 }
-
                 else -> {
                     fragment = homeFragment
                     fragmentTag = "HomeFragment"
@@ -116,9 +116,9 @@ class MainActivity : AppCompatActivity() {
             .getSharedPreferences(ITEM_SELECTED, Context.MODE_PRIVATE)
         val previouslySelectedItem: Int = sharedPreferences.getInt(ITEM_KEY, 0)
         if (previouslySelectedItem != 0) {
-            mBinding.bottomNavigation.selectedItemId = previouslySelectedItem
+            navigation.selectedItemId = previouslySelectedItem
         } else {
-            mBinding.bottomNavigation.selectedItemId = R.id.action_home
+            navigation.selectedItemId = R.id.action_home
         }
     }
 
