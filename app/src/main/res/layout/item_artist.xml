@@ -37,5 +37,3 @@
         tools:text="Artist Name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
