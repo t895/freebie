@@ -15,9 +15,7 @@ class HomeFragment : Fragment() {
     private val TAG = "HomeFragment"
     private lateinit var mBinding: FragmentHomeBinding
 
-    private val songsAdapter by lazy {
-        SongsAdapter(requireContext(), LinkedHashMap())
-    }
+    private lateinit var songsAdapter: SongsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +27,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        songsAdapter = SongsAdapter(requireContext(), LinkedHashMap())
         AfterSongInitializationRunner().runWithLifecycle(activity) {
             songsAdapter.swapData(Song.list)
             mBinding.rvSongs.apply {

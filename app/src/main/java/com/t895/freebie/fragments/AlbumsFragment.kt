@@ -15,9 +15,7 @@ class AlbumsFragment : Fragment() {
     private val TAG = "AlbumsFragment"
     private lateinit var mBinding: FragmentAlbumsBinding
 
-    private val albumsAdapter by lazy {
-        AlbumsAdapter(requireContext(), LinkedHashMap())
-    }
+    private lateinit var albumsAdapter: AlbumsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +28,7 @@ class AlbumsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        albumsAdapter = AlbumsAdapter(requireContext(), LinkedHashMap())
         AfterSongInitializationRunner().runWithLifecycle(activity) {
             albumsAdapter.swapData(Album.list)
             mBinding.rvAlbums.apply {

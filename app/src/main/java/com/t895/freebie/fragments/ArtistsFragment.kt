@@ -15,9 +15,7 @@ class ArtistsFragment : Fragment() {
     private val TAG = "ArtistsFragment"
     private lateinit var mBinding: FragmentArtistsBinding
 
-    private val artistAdapter by lazy {
-        ArtistsAdapter(requireContext(), LinkedHashMap())
-    }
+    private lateinit var artistAdapter: ArtistsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +27,7 @@ class ArtistsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        artistAdapter = ArtistsAdapter(requireContext(), LinkedHashMap())
         AfterSongInitializationRunner().runWithLifecycle(activity) {
             artistAdapter.swapData(Artist.list)
             mBinding.rvArtists.apply {
