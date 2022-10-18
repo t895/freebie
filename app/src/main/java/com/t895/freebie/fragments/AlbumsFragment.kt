@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.t895.freebie.AfterSongInitializationRunner
+import com.t895.freebie.R
 import com.t895.freebie.databinding.FragmentAlbumsBinding
 import com.t895.freebie.utils.InsetsHelper
 
@@ -34,7 +35,7 @@ class AlbumsFragment : Fragment() {
         AfterSongInitializationRunner().runWithLifecycle(activity) {
             albumsAdapter.swapData(Album.list)
             mBinding.rvAlbums.apply {
-                layoutManager = GridLayoutManager(context, 2)
+                layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.grid_columns))
                 adapter = albumsAdapter
             }
         }

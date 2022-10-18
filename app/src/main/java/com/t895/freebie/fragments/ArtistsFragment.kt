@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.t895.freebie.AfterSongInitializationRunner
+import com.t895.freebie.R
 import com.t895.freebie.databinding.FragmentArtistsBinding
 import com.t895.freebie.models.Artist
 import com.t895.freebie.utils.InsetsHelper
@@ -33,7 +34,7 @@ class ArtistsFragment : Fragment() {
         AfterSongInitializationRunner().runWithLifecycle(activity) {
             artistAdapter.swapData(Artist.list)
             mBinding.rvArtists.apply {
-                layoutManager = GridLayoutManager(context, 2)
+                layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.grid_columns))
                 adapter = artistAdapter
             }
         }
