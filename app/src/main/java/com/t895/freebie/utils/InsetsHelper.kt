@@ -12,6 +12,10 @@ object InsetsHelper {
     const val NAV_BAR_DP = 80
     const val EXTRA_LIST_SPACING_DP = 36
 
+    const val THREE_BUTTON_NAVIGATION = 0
+    const val TWO_BUTTON_NAVIGATION = 1
+    const val GESTURE_NAVIGATION = 2
+
     fun dpToPx(context: Context, dp: Int): Int {
         val displayMetrics = context.resources.displayMetrics
         return (dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
@@ -22,12 +26,22 @@ object InsetsHelper {
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             val extraPadding: Int = dpToPx(context, NAV_BAR_DP + EXTRA_LIST_SPACING_DP)
             view.setPadding(
+                insets.left,
                 0,
-                0,
-                0,
+                insets.right,
                 insets.bottom + dpToPx(context, NAV_BAR_DP + EXTRA_LIST_SPACING_DP)
             )
             windowInsets
         }
+    }
+
+    fun getSystemGestureType(context: Context): Int {
+        val resources = context.resources
+        val resourceId =
+            resources.getIdentifier("config_navBarInteractionMode", "integer", "android")
+        if (resourceId != 0) {
+            return resources.getInteger(resourceId)
+        }
+        return 0
     }
 }

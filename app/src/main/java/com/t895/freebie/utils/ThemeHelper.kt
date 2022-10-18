@@ -1,7 +1,7 @@
 package com.t895.freebie.utils
 
+import android.content.res.Configuration
 import android.graphics.Color
-import android.os.Build
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
@@ -11,10 +11,11 @@ import com.t895.freebie.R
 import kotlin.math.roundToInt
 
 object ThemeHelper {
+    const val TAG = "ThemeHelper"
+
     const val NAV_BAR_ALPHA: Float = 0.9f
 
-    fun setTheme(activity: AppCompatActivity)
-    {
+    fun setTheme(activity: AppCompatActivity) {
         setStatusBarColor(activity, R.attr.colorSurface)
     }
 
@@ -24,21 +25,24 @@ object ThemeHelper {
     }
 
     fun setNavigationBarColor(activity: AppCompatActivity, @ColorInt color: Int) {
-        var gestureInset = 0
-        if (Build.VERSION.SDK_INT >= 29) {
-            gestureInset = activity.window.decorView.rootWindowInsets.systemWindowInsetLeft
-        }
-
-        if (gestureInset == 0) {
+        val gestureType = InsetsHelper.getSystemGestureType(activity.applicationContext)
+        val orientation = activity.resources.configuration.orientation
+        if ((gestureType == InsetsHelper.THREE_BUTTON_NAVIGATION || gestureType == InsetsHelper.TWO_BUTTON_NAVIGATION) && orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            activity.window.navigationBarColor = color
+        } else if (gestureType == InsetsHelper.THREE_BUTTON_NAVIGATION || gestureType == InsetsHelper.TWO_BUTTON_NAVIGATION) {
             activity.window.navigationBarColor = getColorWithOpacity(color, NAV_BAR_ALPHA)
         } else {
-            activity.window.navigationBarColor = ContextCompat.getColor(activity.applicationContext,
-                android.R.color.transparent)
+            activity.window.navigationBarColor = ContextCompat.getColor(
+                activity.applicationContext,
+                android.R.color.transparent
+            )
         }
     }
 
     private fun getColorWithOpacity(@ColorInt color: Int, alphaFactor: Float): Int {
-        return Color.argb((alphaFactor * Color.alpha(color)).roundToInt(), Color.red(color),
-            Color.green(color), Color.blue(color))
+        return Color.argb(
+            (alphaFactor * Color.alpha(color)).roundToInt(), Color.red(color),
+            Color.green(color), Color.blue(color)
+        )
     }
 }

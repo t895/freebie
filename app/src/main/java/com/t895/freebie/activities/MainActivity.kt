@@ -154,9 +154,16 @@ class MainActivity : AppCompatActivity() {
         // Insets for app bar
         ViewCompat.setOnApplyWindowInsetsListener(mBinding.appBarLayout) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val mlp = mBinding.appBarLayout.layoutParams as MarginLayoutParams
-            mlp.topMargin = insets.top
-            mBinding.appBarLayout.layoutParams = mlp
+            val mlpAppBar = mBinding.appBarLayout.layoutParams as MarginLayoutParams
+            mlpAppBar.leftMargin = insets.left
+            mlpAppBar.topMargin = insets.top
+            mlpAppBar.rightMargin = insets.right
+            mBinding.appBarLayout.layoutParams = mlpAppBar
+
+            val mlpNavigation = mBinding.bottomNavigation.layoutParams as MarginLayoutParams
+            mlpNavigation.leftMargin = insets.left
+            mlpNavigation.rightMargin = insets.right
+            mBinding.bottomNavigation.layoutParams = mlpNavigation
 
             @ColorInt val navigationBarColor: Int = ElevationOverlayProvider(this).compositeOverlay(
                 MaterialColors.getColor(
