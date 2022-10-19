@@ -63,5 +63,3 @@
         app:menu="@menu/menu_main_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
